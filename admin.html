@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration — TOP VACANCES.BF</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9, #a5d6a7);
+            color: #2e7d32;
+            min-height: 100vh;
+        }
+        .admin-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .admin-header {
+            background: linear-gradient(90deg, #2e7d32, #43a047);
+            padding: 20px 28px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(46,125,50,0.3);
+        }
+        .admin-header h1 {
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-header h1 img {
+            height: 40px;
+            border-radius: 8px;
+        }
+        .admin-header a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border: 2px solid rgba(255,215,0,0.4);
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+        .admin-header a:hover {
+            background: rgba(255,215,0,0.15);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 14px;
+            padding: 6px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #558b2f;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background: #2e7d32;
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(46,125,50,0.3);
+        }
+        .tab:hover:not(.active) {
+            background: rgba(46,125,50,0.1);
+        }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        .panel-card {
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 2px solid rgba(76,175,80,0.2);
+        }
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1b5e20;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f1f8e9;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .toolbar-left label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2e7d32;
+            cursor: pointer;
+        }
+        .toolbar-left input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4caf50;
+            cursor: pointer;
+        }
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-danger { background: #e8f5e9; color: #2e7d32; }
+        .btn-danger:hover { background: #c8e6c9; }
+        .btn-primary { background: #e3f2fd; color: #1565c0; }
+        .btn-primary:hover { background: #bbdefb; }
+        .btn-success { background: #e8f5e9; color: #2e7d32; }
+        .btn-success:hover { background: #c8e6c9; }
+        .btn-warning { background: #fff3e0; color: #e65100; }
+        .btn-warning:hover { background: #ffe0b2; }
+        .btn-sm { padding: 5px 10px; font-size: 0.75rem; border-radius: 6px; }
+        .btn-add {
+            background: linear-gradient(90deg, #66bb6a, #388e3c);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+        .btn-add:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(46,125,50,0.3); }
+
+        .table-wrap { overflow-x: auto; min-width: 100%; }
+        .table-wrap > table { min-width: 1400px; }
+        .table-top-scroll { overflow-x: auto; height: 12px; margin-bottom: 0; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        th {
+            text-align: left;
+            padding: 10px 8px;
+            background: #f9fbe7;
+            color: #33691e;
+            font-weight: 700;
+            border-bottom: 2px solid #dcedc8;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #f1f8e9;
+            vertical-align: top;
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        tr:hover td { background: #fafff5; }
+        td:first-child, th:first-child { width: 36px; text-align: center; }
+        td:last-child, th:last-child { width: 50px; text-align: center; }
+        td input[type="checkbox"] { width: 16px; height: 16px; accent-color: #4caf50; cursor: pointer; }
+        .del-single {
+            background: none;
+            border: none;
+            color: #2e7d32;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 2px;
+            transition: 0.2s;
+        }
+        .del-single:hover { transform: scale(1.3); }
+        .btn-action {
+            display: inline-block;
+            padding: 2px 5px;
+            margin: 1px;
+            border: 1px solid #c8e6c9;
+            border-radius: 4px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 0.68rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .btn-action:hover { background: #2e7d32; color: #fff; }
+        .btn-xs { padding: 1px 3px; font-size: 0.65rem; min-width: 20px; text-align: center; }
+        .btn-publish { border-color: #ffcc02; background: #fff8e1; color: #e65100; }
+        .btn-publish:hover { background: #e65100; color: #fff; }
+        .btn-reject { border-color: #ef5350; background: #ffebee; color: #c62828; }
+        .btn-reject:hover { background: #c62828; color: #fff; }
+        .btn-action:hover { background: #2e7d32; color: #fff; }
+        .btn-publish { border-color: #ffcc02; background: #fff8e1; color: #e65100; }
+        .btn-publish:hover { background: #e65100; color: #fff; }
+        .btn-reject { border-color: #ef5350; background: #ffebee; color: #c62828; }
+        .btn-reject:hover { background: #c62828; color: #fff; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-green { background: #e8f5e9; color: #2e7d32; }
+        .badge-orange { background: #fff3e0; color: #e65100; }
+        .badge-blue { background: #e3f2fd; color: #1565c0; }
+
+        .sponsor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .sponsor-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #e8f5e9;
+            flex-wrap: wrap;
+        }
+        .sponsor-item .sp-index {
+            font-weight: 700;
+            color: #999;
+            font-size: 0.85rem;
+            width: 28px;
+            flex-shrink: 0;
+        }
+        .sponsor-item .sp-preview {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            background: #f1f8e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #dcedc8;
+        }
+        .sponsor-item .sp-preview img,
+        .sponsor-item .sp-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .sponsor-item .sp-info {
+            flex: 1;
+            min-width: 120px;
+        }
+        .sponsor-item .sp-info .sp-url {
+            font-size: 0.78rem;
+            color: #1565c0;
+            word-break: break-all;
+        }
+        .sponsor-item .sp-info .sp-type {
+            font-size: 0.7rem;
+            color: #999;
+        }
+        .sponsor-item .sp-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .sponsor-form {
+            background: #f1f8e9;
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border: 1px solid #c8e6c9;
+            margin-bottom: 16px;
+        }
+        .sponsor-form .field {
+            flex: 1;
+            min-width: 200px;
+        }
+        .sponsor-form .field label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 4px;
+        }
+        .sponsor-form .field input,
+        .sponsor-form .field select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid rgba(76,175,80,0.25);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: #fff;
+            color: #333;
+            outline: none;
+        }
+        .sponsor-form .field input:focus,
+        .sponsor-form .field select:focus {
+            border-color: #4caf50;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #689f38;
+            font-size: 0.95rem;
+        }
+        .counter {
+            font-size: 0.8rem;
+            color: #689f38;
+            font-weight: 600;
+        }
+        .search-input {
+            padding: 8px 14px;
+            border: 2px solid rgba(76,175,80,0.25);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            background: #fff;
+            color: #333;
+            outline: none;
+            min-width: 180px;
+        }
+        .search-input:focus { border-color: #4caf50; }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.25s ease;
+        }
+        .modal-card p { font-size: 1rem; color: #333; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+        .modal-card .modal-actions { display: flex; gap: 12px; justify-content: center; }
+        .modal-card .modal-actions button {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-card .modal-actions .btn-confirm { background: #2e7d32; color: #fff; }
+        .modal-card .modal-actions .btn-confirm:hover { background: #1b5e20; }
+        .modal-card .modal-actions .btn-cancel { background: #e8f5e9; color: #2e7d32; }
+        .modal-card .modal-actions .btn-cancel:hover { background: #c8e6c9; }
+        @keyframes modalIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 700px) {
+            .admin-wrap { padding: 12px; }
+            .admin-header { padding: 14px 16px; }
+            .admin-header h1 { font-size: 1rem; }
+            .panel-card { padding: 14px; }
+            .tabs { gap: 2px; padding: 4px; }
+            .tab { padding: 8px 12px; font-size: 0.75rem; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-actions { justify-content: center; }
+            .sponsor-form { flex-direction: column; }
+            .sponsor-form .field { min-width: auto; }
+            .sponsor-item { flex-direction: column; align-items: stretch; text-align: center; }
+            .sponsor-item .sp-preview { margin: 0 auto; }
+            .sponsor-item .sp-actions { justify-content: center; }
+            .search-input { width: 100%; min-width: auto; }
+            td { max-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrap">
+        <header class="admin-header">
+            <h1><img src="images/logo.png" alt=""> Administration TOP VACANCES.BF</h1>
+            <a href="index.html">⬅ Retour à l'accueil</a>
+        </header>
+
+        <div class="tabs" id="adminTabs">
+            <button class="tab active" data-tab="tabPubs" onclick="switchTab('tabPubs', this)">📢 Publications</button>
+            <button class="tab" data-tab="tabSoumissions" onclick="switchTab('tabSoumissions', this)">📋 Soumissions</button>
+            <button class="tab" data-tab="tabSponsor" onclick="switchTab('tabSponsor', this)">📸 Sponsor</button>
+        </div>
+
+        <!-- ==================== TAB 1: PUBLICATIONS ==================== -->
+        <div class="panel active" id="tabPubs">
+            <div class="panel-card">
+                <div class="panel-title">📢 Toutes les publications</div>
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <label><input type="checkbox" id="checkAllPubs" onchange="toggleCheckAll('pubs')"> Tout cocher</label>
+                        <span class="counter" id="pubsCounter">0 publication(s)</span>
+                        <input type="search" class="search-input" id="searchPubs" placeholder="Rechercher..." oninput="renderPubs()">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-danger" onclick="deleteSelected('pubs')">🗑️ Supprimer</button>
+                        <button class="btn btn-primary" onclick="exportJSON('pubs')">📥 Exporter JSON</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr>
+                            <th></th>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Titre</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Statut</th>
+                            <th>WhatsApp</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody id="pubsBody"><tr><td colspan="11" class="empty-state">Aucune publication</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: SOUMISSIONS ==================== -->
+        <div class="panel" id="tabSoumissions">
+            <div class="panel-card">
+                <div class="panel-title">📋 Soumissions (Publier / Revendiquer)</div>
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <label><input type="checkbox" id="checkAllSubs" onchange="toggleCheckAll('subs')"> Tout cocher</label>
+                        <span class="counter" id="subsCounter">0 soumission(s)</span>
+                        <input type="search" class="search-input" id="searchSubs" placeholder="Rechercher..." oninput="renderSubs()">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-success" onclick="batchCertify()">✅ Certifier</button>
+                        <button class="btn btn-danger" onclick="deleteSelected('subs')">🗑️ Supprimer</button>
+                        <button class="btn btn-primary" onclick="exportJSON('subs')">📥 Exporter JSON</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr>
+                            <th></th>
+                            <th>#</th>
+                            <th>Lien / Source</th>
+                            <th>WhatsApp</th>
+                            <th>Type</th>
+                            <th>Catégorie</th>
+                            <th>Statut</th>
+                            <th>Revendique</th>
+                            <th>Date</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody id="subsBody"><tr><td colspan="11" class="empty-state">Aucune soumission</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: SPONSOR ==================== -->
+        <div class="panel" id="tabSponsor">
+            <div class="panel-card">
+                <div class="panel-title">📸 Gestion des frames Sponsor vacances</div>
+                <p style="font-size:0.85rem;color:#558b2f;margin-bottom:16px;line-height:1.5;">
+                    Ajoutez des images ou vidéos à afficher dans les encarts sponsor de la galerie.
+                    Les frames sponsor apparaissent après chaque 3 annonces.
+                </p>
+
+                <div class="sponsor-form" id="sponsorForm">
+                    <div class="field">
+                        <label>URL de l'image / vidéo</label>
+                        <input type="url" id="spURL" placeholder="https://exemple.com/image.jpg">
+                    </div>
+                    <div class="field">
+                        <label>Type</label>
+                        <select id="spType" multiple size="2">
+                            <option value="image">Image</option>
+                            <option value="video">Vidéo</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:0 0 auto;min-width:auto;">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-add" onclick="addSponsor()">+ Ajouter</button>
+                    </div>
+                </div>
+
+                <div id="sponsorList" class="sponsor-list">
+                    <div class="empty-state">Aucun sponsor configuré</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-card">
+            <p id="confirmMsg">Confirmer la suppression ?</p>
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="confirmAction(true)">Confirmer</button>
+                <button class="btn-cancel" onclick="confirmAction(false)">Annuler</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal-card" style="max-width:600px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <strong style="font-size:1rem;">📸 Galerie de fichiers</strong>
+                <button onclick="closeGalleryModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">×</button>
+            </div>
+            <div id="modalGalleryContent"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="dossierModal">
+        <div class="modal-card" style="max-width:700px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <strong style="font-size:1rem;">📄 Dossier publication</strong>
+                <button onclick="closeDossierModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">×</button>
+            </div>
+            <div id="dossierModalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ---- Auth helpers (Cloudflare D1) ----
+        const API_BASE = 'https://www.topvacances.bf';
+        function getSessionToken() {
+            return localStorage.getItem('tv_session_token');
+        }
+        function getAuthHeaders() {
+            const token = getSessionToken();
+            return token
+                ? { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+                : { 'Content-Type': 'application/json' };
+        }
+
+        // ---- Data (chargé depuis Cloudflare D1) ----
+        let _data = {
+            pubs: [],
+            subs: [],
+            sponsors: []
+        };
+        let _pendingAction = null;
+        let _pendingIds = null;
+
+        async function loadData() {
+            await loadPublications();
+            await loadSponsors();
+        }
+
+        async function loadPublications() {
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/publications', { headers: getAuthHeaders() });
+                const json = await resp.json();
+                const all = json.publications || [];
+                // Les soumissions ont un id commençant par 'sub_' : publications crées par les utilisateurs
+                _data.pubs = all.filter(function(p) { return !String(p.id).startsWith('sub_'); });
+                _data.subs = all.filter(function(p) { return String(p.id).startsWith('sub_'); });
+            } catch(e) {
+                _data.pubs = [];
+                _data.subs = [];
+            }
+        }
+
+        async function loadSponsors() {
+            try {
+                const resp = await fetch(API_BASE + '/api/sponsors', { headers: getAuthHeaders() });
+                const json = await resp.json();
+                _data.sponsors = json.sponsors || [];
+            } catch(e) { _data.sponsors = []; }
+        }
+
+        // Convertisseur de description JSON (soumissions)
+        function parseDesc(p) {
+            if (!p) return {};
+            try { return JSON.parse(p.description || '{}'); } catch(e) { return {}; }
+        }
+
+        // Anciennes fonctions localStorage supprimées
+        function savePubs() {}
+        function saveSubs() {}
+        function saveSponsors() {}
+
+        // ---- Tabs ----
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+            if (btn) btn.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+            if (tab === 'tabPubs') renderPubs();
+            else if (tab === 'tabSoumissions') renderSubs();
+            else if (tab === 'tabSponsor') renderSponsors();
+        }
+
+        // ---- Publications (normales) ----
+        function renderPubs() {
+            var q = (document.getElementById('searchPubs').value || '').toLowerCase().trim();
+            var list = _data.pubs;
+            if (q) list = list.filter(function(p) {
+                var txt = (p.titre || '') + ' ' + (p.page_name || '') + ' ' + (p.description || '');
+                return txt.toLowerCase().indexOf(q) !== -1;
+            });
+            document.getElementById('pubsCounter').textContent = list.length + ' publication(s)';
+            var tbody = document.getElementById('pubsBody');
+            if (!list.length) {
+                tbody.innerHTML = '<tr><td colspan="11" class="empty-state">Aucune publication</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(function(p, i) {
+                var img = p.image || p.creative_image_url || '';
+                var imgHtml = img ? '<img src="' + img + '" style="width:50px;height:40px;object-fit:cover;border-radius:6px;" onerror="this.style.display=\'none\'">' : '—';
+                var published = p.certifie;
+                var status = published ? '<span class="badge badge-green">✅ Certifié</span>' : '<span class="badge badge-orange">⏳ En attente</span>';
+                var whatsapp = p.whatsapp || '—';
+                var typeLabel = p.type === 'shopping' ? '<span class="badge badge-blue">Shopping</span>' : '<span class="badge badge-green">Activités</span>';
+                return '<tr>'
+                    + '<td><input type="checkbox" class="ck-pubs" value="' + p.id + '"></td>'
+                    + '<td>' + (i + 1) + '</td>'
+                    + '<td>' + imgHtml + '</td>'
+                    + '<td style="max-width:160px;">' + escHtml(p.titre || p.page_name || 'Sans titre') + '</td>'
+                    + '<td>' + (p.date || p.delivery_start_time || '—') + '</td>'
+                    + '<td>' + typeLabel + '</td>'
+                    + '<td>' + status + '</td>'
+                    + '<td style="max-width:140px;">' + escHtml(whatsapp) + '</td>'
+                    + '<td style="max-width:160px;font-size:0.8rem;">' + escHtml(p.auteur_email || '—') + '</td>'
+                    + '<td style="white-space:nowrap;">' + galleryBtn(p.id) + ' <button class="btn-action" onclick="showPubDossier(\'' + p.id + '\')" title="Voir le dossier complet">📄</button> <button class="del-single" onclick="deleteSingle(\'pubs\',\'' + p.id + '\')" title="Supprimer">✕</button></td>'
+                    + '</tr>';
+            }).join('');
+            setTimeout(syncTopScrollbars, 10);
+        }
+
+        function confirmReject(id, action, label) {
+            if (confirm('❌ Rejeter le ' + label + ' de cette publication ?\n\nMessage standard : Le ' + label.toLowerCase() + ' n\'est pas conforme aux objectifs de la plateforme Topvacances.bf. Consultez le résumé complet du dossier pour plus de détails.')) {
+                updateStatus(id, action);
+            }
+        }
+        function showPubDossier(id) {
+            var p = _data.pubs ? _data.pubs.find(function(x) { return String(x.id) === String(id); }) : null;
+            if (!p) { toast('❌ Publication introuvable'); return; }
+            var d = parseDesc(p);
+            var meta = d.meta || d;
+            var lines = [];
+            lines.push('<div class="dossier-modal">');
+            lines.push('<h3>📄 Dossier #' + escHtml(p.id) + '</h3>');
+            lines.push('<table style="width:100%;border-collapse:collapse;font-size:0.85rem;">');
+            function row(l, v) { return '<tr><td style="padding:6px 8px;font-weight:600;border-bottom:1px solid #eee;width:30%;">' + l + '</td><td style="padding:6px 8px;border-bottom:1px solid #eee;">' + (v || '—') + '</td></tr>'; }
+            lines.push(row('Promoteur', p.promoteur || p.titre || p.page_name));
+            lines.push(row('ID', p.id));
+            lines.push(row('Type', p.type === 'shopping' ? 'Shopping' : 'Activités'));
+            lines.push(row('Nom', p.activity_name || '—'));
+            lines.push(row('Date', p.date || p.created_at));
+            lines.push(row('Texte de publication', p.texte_publication || '—'));
+            lines.push(row('WhatsApp', p.whatsapp));
+            lines.push(row('Email auteur', p.auteur_email));
+            lines.push(row('Statut', p.certifie ? '✅ Certifié' : '⏳ En attente'));
+            lines.push(row('Paiement', p.payment_status === 'validated' ? '✅ Validé' : p.payment_status === 'rejected' ? '❌ Rejeté' : '⏳ En attente'));
+            lines.push(row('Contenu', p.content_status === 'validated' ? '✅ Validé' : p.content_status === 'rejected' ? '❌ Rejeté' : '⏳ En attente'));
+            if (meta.categorie) lines.push(row('Catégorie', meta.categorie));
+            if (meta.ville) lines.push(row('Ville', meta.ville));
+            if (meta.budget_min || meta.budget_max) lines.push(row('Budget', (meta.budget_min || '0') + ' - ' + (meta.budget_max || '0') + ' FCFA'));
+            if (meta.age_min || meta.age_max) lines.push(row('Âge', (meta.age_min || '0') + ' - ' + (meta.age_max || '0') + ' ans'));
+            if (meta.horaires && meta.horaires.length) lines.push(row('Horaires', meta.horaires.join(', ')));
+            if (meta.jours && meta.jours.length) lines.push(row('Jours', meta.jours.join(', ')));
+            if (meta.access && meta.access.length) lines.push(row('Accessible aux', meta.access.join(', ')));
+            lines.push('</table>');
+            lines.push('<div style="margin-top:16px;text-align:center;"><button class="btn btn-primary" onclick="closeDossierModal()">Fermer</button></div>');
+            lines.push('</div>');
+            document.getElementById('dossierModalContent').innerHTML = lines.join('');
+            document.getElementById('dossierModal').classList.add('active');
+        }
+        function closeDossierModal() {
+            document.getElementById('dossierModal').classList.remove('active');
+        }
+
+        // ---- Soumissions (Publier / Revendiquer) — depuis Cloudflare D1 ----
+        function renderSubs() {
+            var q = (document.getElementById('searchSubs').value || '').toLowerCase().trim();
+            var list = _data.subs;
+            if (q) list = list.filter(function(s) {
+                var d = parseDesc(s);
+                var txt = (s.lien || '') + ' ' + (s.whatsapp || '') + ' ' + (d.categorie || '') + ' ' + (s.titre || '') + ' ' + (d.ville || '');
+                return txt.toLowerCase().indexOf(q) !== -1;
+            });
+            document.getElementById('subsCounter').textContent = list.length + ' soumission(s)';
+            var tbody = document.getElementById('subsBody');
+            if (!list.length) {
+                tbody.innerHTML = '<tr><td colspan="12" class="empty-state">Aucune soumission</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(function(s, i) {
+                var d = parseDesc(s);
+                var meta = d.meta || d;
+                var revendiqueId = meta.revendique_id || null;
+                var status = s.certifie
+                    ? '<span class="badge badge-green">✅ Certifié</span>'
+                    : '<span class="badge badge-orange">⏳ En attente</span>';
+                var typeLabel = (meta.type || 'publier') === 'revendiquer' ? '🔄 Revendiquer' : '📢 Publier';
+                var whatsapp = s.whatsapp || '—';
+                var categorie = meta.categorie || '—';
+                var payDone = s.payment_status === 'validated';
+                var contentDone = s.content_status === 'validated';
+                var payRejected = s.payment_status === 'rejected';
+                var contentRejected = s.content_status === 'rejected';
+                var published = s.certifie;
+                var payBtn = payDone ? '<span class="badge badge-green" style="font-size:0.7rem;">💳 OK</span>' : (payRejected ? '<span class="badge badge-red" style="font-size:0.7rem;">💳 Non</span>' : '<button class="btn-action btn-xs" onclick="updateStatus(\'' + s.id + '\',\'payment_validated\')" title="Paiement OK">💳</button><button class="btn-action btn-xs btn-reject" onclick="confirmReject(\'' + s.id + '\',\'payment_rejected\',\'Paiement\')" title="Rejeter paiement">❌</button>');
+                var contentBtn = contentDone ? '<span class="badge badge-green" style="font-size:0.7rem;">📝 OK</span>' : (contentRejected ? '<span class="badge badge-red" style="font-size:0.7rem;">📝 Non</span>' : '<button class="btn-action btn-xs" onclick="updateStatus(\'' + s.id + '\',\'content_validated\')" title="Contenu OK">📝</button><button class="btn-action btn-xs btn-reject" onclick="confirmReject(\'' + s.id + '\',\'content_rejected\',\'Contenu\')" title="Rejeter contenu">❌</button>');
+                var publishBtn = published ? '<span class="badge badge-green" style="font-size:0.7rem;">🚀 OK</span>' : '<button class="btn-action btn-xs btn-publish" onclick="updateStatus(\'' + s.id + '\',\'publish\')" title="Publier">🚀</button>';
+                var shopTypeLabel = s.type === 'shopping' ? '<span class="badge badge-blue">Shopping</span>' : '<span class="badge badge-green">Activités</span>';
+                return '<tr>'
+                    + '<td><input type="checkbox" class="ck-subs" value="' + s.id + '"></td>'
+                    + '<td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;" title="' + escHtml(s.id) + '">' + escHtml(s.id) + '</td>'
+                    + '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;" title="' + escHtml(s.lien || '') + '">' + escHtml(s.lien || '—') + '</td>'
+                    + '<td>' + escHtml(whatsapp) + '</td>'
+                    + '<td>' + shopTypeLabel + '</td>'
+                    + '<td>' + escHtml(categorie) + '</td>'
+                    + '<td>' + status + '<br><span style="font-size:0.7rem;color:#999;">' + typeLabel + '</span></td>'
+                    + '<td style="font-size:0.8rem;">' + (revendiqueId ? escHtml(revendiqueId) : '—') + '</td>'
+                    + '<td>' + (s.date || s.created_at || '—') + '</td>'
+                    + '<td style="font-size:0.8rem;">' + escHtml(s.auteur_email || '—') + '</td>'
+                    + '<td style="white-space:nowrap;">' + galleryBtn(s.id) + '<button class="btn-action btn-xs" onclick="showPubDossier(\'' + s.id + '\')" title="Dossier">📄</button>' + payBtn + contentBtn + publishBtn + '<button class="del-single" onclick="deleteSingle(\'subs\',\'' + s.id + '\')" title="Supprimer">✕</button></td>'
+                    + '</tr>';
+            }).join('');
+            setTimeout(syncTopScrollbars, 10);
+        }
+
+        async function updateStatus(id, action) {
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/publications', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ action: action, ids: [id] })
+                });
+                const json = await resp.json();
+                if (resp.ok) {
+                    await loadData();
+                    renderSubs();
+                    toast('✅ Statut mis à jour.');
+                } else {
+                    toast('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { toast('❌ Erreur réseau'); }
+        }
+        async function batchCertify() {
+            var ids = getCheckedIds('ck-subs');
+            if (!ids.length) { alert('Sélectionnez des soumissions à certifier.'); return; }
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/publications', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ action: 'certifie', ids: ids })
+                });
+                const json = await resp.json();
+                await loadData();
+                renderSubs();
+                alert('✅ ' + (json.certified || []).length + ' soumission(s) certifiée(s) sur ' + ids.length + '.');
+            } catch(e) { alert('❌ Erreur lors de la certification.'); }
+        }
+
+        // ---- Sponsors ----
+        function renderSponsors() {
+            var container = document.getElementById('sponsorList');
+            var list = _data.sponsors;
+            if (!list.length) {
+                container.innerHTML = '<div class="empty-state">Aucun sponsor configuré</div>';
+                return;
+            }
+            container.innerHTML = list.map(function(s, i) {
+                var preview = !s.url
+                    ? '<span style="color:#ccc;font-size:1.2rem;">📸</span>'
+                    : s.type === 'video'
+                        ? '<video src="' + s.url + '" muted style="width:100%;height:100%;object-fit:cover;"></video>'
+                        : '<img src="' + s.url + '" onerror="this.parentElement.innerHTML=\'<span style=color:#2e7d32;font-size:0.7rem;>Erreur</span>\'">';
+                return '<div class="sponsor-item">'
+                    + '<div class="sp-index">#' + (i + 1) + '</div>'
+                    + '<div class="sp-preview">' + preview + '</div>'
+                    + '<div class="sp-info">'
+                    + (s.url ? '<div class="sp-url">' + escHtml(s.url) + '</div>' : '<div style="color:#ccc;font-size:0.8rem;">Aucun média</div>')
+                    + '<div class="sp-type">' + (s.type === 'video' ? '🎬 Vidéo' : '🖼️ Image') + '</div>'
+                    + '</div>'
+                    + '<div class="sp-actions">'
+                    + '<button class="btn btn-warning btn-sm" onclick="editSponsor(' + i + ')">✏️</button>'
+                    + '<button class="btn btn-danger btn-sm" onclick="deleteSponsor(' + i + ')">🗑️</button>'
+                    + '</div>'
+                    + '</div>';
+            }).join('');
+        }
+
+        async function addSponsor() {
+            var url = document.getElementById('spURL').value.trim();
+            var type = document.getElementById('spType').value;
+            if (!url) { alert('Veuillez entrer une URL.'); return; }
+            try {
+                const resp = await fetch(API_BASE + '/api/sponsors', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ url: url, type: type })
+                });
+                const json = await resp.json();
+                if (json.success) {
+                    document.getElementById('spURL').value = '';
+                    await loadSponsors();
+                    renderSponsors();
+                    toast('✅ Sponsor ajouté');
+                } else {
+                    alert('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { alert('❌ Erreur réseau'); }
+        }
+
+        async function editSponsor(idx) {
+            var s = _data.sponsors[idx];
+            if (!s) return;
+            var newUrl = prompt('Modifier l\'URL du sponsor #' + (idx + 1) + ' :', s.url);
+            if (newUrl === null) return;
+            var newType = prompt('Type (image ou video) :', s.type);
+            if (newType === null) return;
+            if (newType !== 'image' && newType !== 'video') { alert('Type invalide. Utilisez "image" ou "video".'); return; }
+            try {
+                const resp = await fetch(API_BASE + '/api/sponsors/' + encodeURIComponent(s.id), {
+                    method: 'PUT',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ url: newUrl.trim(), type: newType })
+                });
+                const json = await resp.json();
+                if (json.success) {
+                    await loadSponsors();
+                    renderSponsors();
+                    toast('✅ Sponsor #' + (idx + 1) + ' modifié');
+                } else {
+                    alert('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { alert('❌ Erreur réseau'); }
+        }
+
+        async function deleteSponsor(idx) {
+            if (!confirm('Supprimer le sponsor #' + (idx + 1) + ' ?')) return;
+            var s = _data.sponsors[idx];
+            if (!s) return;
+            try {
+                const resp = await fetch(API_BASE + '/api/sponsors/' + encodeURIComponent(s.id), {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                const json = await resp.json();
+                if (json.success || resp.ok) {
+                    await loadSponsors();
+                    renderSponsors();
+                    toast('🗑️ Sponsor supprimé');
+                } else {
+                    alert('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { alert('❌ Erreur réseau'); }
+        }
+
+        // ---- Multi-select helpers ----
+        function toggleCheckAll(prefix) {
+            var checked = document.getElementById('checkAll' + prefix.charAt(0).toUpperCase() + prefix.slice(1)).checked;
+            document.querySelectorAll('.ck-' + prefix).forEach(function(cb) { cb.checked = checked; });
+        }
+
+        function getCheckedIds(cls) {
+            return Array.from(document.querySelectorAll('.' + cls + ':checked')).map(function(cb) { return cb.value; });
+        }
+
+        function deleteSelected(type) {
+            var cls = type === 'pubs' ? 'ck-pubs' : 'ck-subs';
+            var ids = getCheckedIds(cls);
+            if (!ids.length) { alert('Sélectionnez des éléments à supprimer.'); return; }
+            _pendingAction = 'delete_' + type;
+            _pendingIds = ids;
+            document.getElementById('confirmMsg').textContent = 'Supprimer ' + ids.length + ' élément(s) ?';
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function galleryBtn(id) {
+            return '<button class="btn-action" onclick="showPubGallery(\'' + id + '\')" title="Voir la galerie">📸</button>';
+        }
+        async function showPubGallery(publicationId) {
+            try {
+                const resp = await fetch(API_BASE + '/api/publications/files?publication_id=' + encodeURIComponent(publicationId), { headers: getAuthHeaders() });
+                const data = await resp.json();
+                if (!data.success) { toast('❌ ' + (data.error || 'Erreur')); return; }
+                var files = data.files || [];
+                if (!files.length) { toast('📸 Aucun fichier pour cette publication'); return; }
+                var html = '<div style="display:flex;flex-wrap:wrap;gap:8px;max-height:400px;overflow-y:auto;">';
+                for (var f of files) {
+                    var src = f.data || '';
+                    if (f.type === 'video') {
+                        html += '<div style="width:120px;text-align:center;"><video src="' + escHtml(src) + '" style="width:100%;height:80px;object-fit:cover;border-radius:6px;" controls></video><br><a href="' + escHtml(src) + '" download="' + escHtml(f.filename || 'video') + '" style="font-size:0.7rem;">📥 Télécharger</a></div>';
+                    } else {
+                        html += '<div style="width:120px;text-align:center;"><img src="' + escHtml(src) + '" style="width:100%;height:80px;object-fit:cover;border-radius:6px;"><br><a href="' + escHtml(src) + '" download="' + escHtml(f.filename || 'image') + '" style="font-size:0.7rem;">📥 Télécharger</a></div>';
+                    }
+                }
+                html += '</div>';
+                document.getElementById('modalGalleryContent').innerHTML = html;
+                document.getElementById('galleryModal').classList.add('active');
+            } catch(e) { toast('❌ Erreur réseau'); }
+        }
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').classList.remove('active');
+        }
+        function deleteSingle(type, id) {
+            _pendingAction = 'deleteSingle_' + type;
+            _pendingIds = [id];
+            document.getElementById('confirmMsg').textContent = 'Supprimer cet élément ?';
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        async function confirmAction(ok) {
+            document.getElementById('confirmModal').classList.remove('active');
+            if (!ok || !_pendingAction) { _pendingAction = null; _pendingIds = null; return; }
+            var ids = _pendingIds;
+            _pendingAction = null;
+            _pendingIds = null;
+
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/publications', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ action: 'delete', ids: ids })
+                });
+                const json = await resp.json();
+                await loadData();
+                renderPubs();
+                renderSubs();
+                toast('🗑️ ' + (json.deleted || []).length + ' élément(s) supprimé(s).');
+            } catch(e) { toast('❌ Erreur lors de la suppression.'); }
+        }
+
+        // ---- Export JSON ----
+        function exportJSON(type) {
+            var cls = type === 'pubs' ? 'ck-pubs' : 'ck-subs';
+            var checked = getCheckedIds(cls);
+            var data = type === 'pubs' ? _data.pubs : _data.subs;
+            var exportData = checked.length ? data.filter(function(d) { return checked.indexOf(String(d.id)) !== -1; }) : data;
+            if (!exportData.length) { alert('Aucune donnée à exporter.'); return; }
+            var blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = type + '_export_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // ---- Util ----
+        function escHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function toast(msg) {
+            var el = document.createElement('div');
+            el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#1b5e20;color:#fff;padding:12px 24px;border-radius:12px;font-weight:600;font-size:0.9rem;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:modalIn 0.2s ease;';
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(function() { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(function() { el.remove(); }, 300); }, 2500);
+        }
+
+        // ---- Init (depuis Cloudflare D1) ----
+        function initTopScrollbars() {
+            document.querySelectorAll('.table-wrap').forEach(function(wrap) {
+                if (wrap.previousElementSibling && wrap.previousElementSibling.classList.contains('table-top-scroll')) return;
+                var topScroll = document.createElement('div');
+                topScroll.className = 'table-top-scroll';
+                wrap.parentNode.insertBefore(topScroll, wrap);
+                var filler = document.createElement('div');
+                filler.style.height = '1px';
+                topScroll.appendChild(filler);
+                function setFillerWidth() {
+                    var table = wrap.querySelector('table');
+                    if (table) filler.style.width = table.scrollWidth + 'px';
+                }
+                setFillerWidth();
+                topScroll.addEventListener('scroll', function() { wrap.scrollLeft = topScroll.scrollLeft; });
+                wrap.addEventListener('scroll', function() { topScroll.scrollLeft = wrap.scrollLeft; });
+                var ro = new ResizeObserver(setFillerWidth);
+                ro.observe(wrap);
+            });
+        }
+        function syncTopScrollbars() {
+            document.querySelectorAll('.table-top-scroll').forEach(function(el) {
+                var wrap = el.nextElementSibling;
+                if (!wrap || !wrap.querySelector) return;
+                var table = wrap.querySelector('table');
+                if (!table) return;
+                var filler = el.querySelector('div');
+                if (filler) filler.style.width = table.scrollWidth + 'px';
+                el.scrollLeft = wrap.scrollLeft;
+            });
+        }
+        loadData().then(function() {
+            renderPubs();
+            renderSubs();
+            renderSponsors();
+            setTimeout(initTopScrollbars, 50);
+        });
+    </script>
+</body>
+</html>

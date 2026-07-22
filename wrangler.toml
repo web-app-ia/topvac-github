@@ -1,0 +1,8 @@
+name = "top-vacances-bf"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "top-vacances-bf-db"
+database_id = "ee5e58aa-f0a9-4f80-a8b5-706adade9b89"
