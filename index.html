@@ -33,29 +33,6 @@
             border-bottom: 2px solid rgba(76, 175, 80, 0.3);
         }
 
-        .banner-header {
-            background: linear-gradient(90deg, #a5d6a7, #81c784, #a5d6a7);
-            padding: 131px 0 25px;
-        }
-
-        .banner-header h1 {
-            font-size: 2.5rem;
-            color: #fff;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            margin-bottom: 0;
-            line-height: 1.1;
-        }
-
-        .banner-header p {
-            font-size: 1.1rem;
-            color: #e8f5e9;
-            margin-top: 0;
-            letter-spacing: 1px;
-            line-height: 1;
-        }
-
         .banner-img {
             max-width: 100%;
             height: auto;
@@ -1259,11 +1236,7 @@
         }
 
         @media (max-width: 700px) {
-            .banner-header { padding: 101px 10px 16px; }
             .banner-footer { padding: 16px 10px; }
-            .banner-header h1 { font-size: 1.3rem; letter-spacing: 1px; }
-            .banner-header p { font-size: 0.85rem; }
-            .banner-header img[style*="height: 160px"] { height: 110px !important; }
             .banner-img { border-radius: 12px; }
             .btn { font-size: 0.9rem; padding: 14px 28px; }
             .btn-visiteur { font-size: 0.85rem; padding: 12px 20px; width: 100%; }
@@ -1794,8 +1767,8 @@
             box-shadow: 0 6px 30px rgba(46,125,50,0.7);
         }
         .nouveautes-fab.active {
-            background: linear-gradient(135deg, #43a047, #2e7d32);
-            box-shadow: 0 4px 20px rgba(46,125,50,0.5);
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
+            box-shadow: 0 4px 20px rgba(13,71,161,0.5);
             border-color: rgba(255,255,255,0.6);
             animation: pulseNouveau 3s ease-in-out infinite;
             max-width: 95px;
@@ -1804,11 +1777,11 @@
             min-height: 48px;
         }
         .nouveautes-fab.active:hover {
-            box-shadow: 0 6px 30px rgba(46,125,50,0.7);
+            box-shadow: 0 6px 30px rgba(13,71,161,0.7);
         }
         @keyframes pulseNouveau {
-            0%, 100% { box-shadow: 0 4px 20px rgba(46,125,50,0.5); }
-            50% { box-shadow: 0 4px 30px rgba(46,125,50,0.8); }
+            0%, 100% { box-shadow: 0 4px 20px rgba(13,71,161,0.5); }
+            50% { box-shadow: 0 4px 30px rgba(13,71,161,0.8); }
         }
         .nouveautes-header {
             position: sticky;
@@ -2731,13 +2704,13 @@
             z-index: 1500;
             padding: 14px 24px;
             border-radius: 50px;
-            background: linear-gradient(135deg, #ff9800, #f57c00);
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
             color: #fff;
             border: 2px solid rgba(255,255,255,0.3);
             font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255,152,0,0.5);
+            box-shadow: 0 4px 20px rgba(13,71,161,0.5);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -2746,7 +2719,7 @@
         }
         .publier-fab:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 30px rgba(255,152,0,0.7);
+            box-shadow: 0 6px 30px rgba(13,71,161,0.7);
         }
 
         /* ---- Page Publier ---- */
@@ -3779,8 +3752,8 @@
             justify-content: space-between;
             gap: 14px;
             padding: 10px 20px;
-            background: #ff9800;
-            box-shadow: 0 2px 12px rgba(255,152,0,0.3);
+            background: linear-gradient(90deg, #4caf50, #66bb6a);
+            box-shadow: 0 2px 12px rgba(76,175,80,0.3);
         }
         .top-bar .app-icon-btn,
         .top-bar .cart-fab {
@@ -4761,17 +4734,7 @@
         </div>
     </div>
 
-    <header class="banner banner-header" id="bannerHeader">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
-            <img src="images/logo.png" alt="Logo TOP VACANCES.BF" style="height: 160px; width: auto; border-radius: 16px;">
-            <div>
-                <h1>TOP VACANCES.BF</h1>
-                <p>POUR DES VACANCES TOP TOP ET UTILES</p>
-            </div>
-        </div>
-    </header>
-
-    <div id="bannerSubtitle" style="text-align:center;padding:10px 20px;font-weight:700;font-size:0.95rem;color:#2e7d32;background:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;">
+    <div id="bannerSubtitle" style="text-align:center;padding:130px 20px 10px;font-weight:700;font-size:0.95rem;color:#2e7d32;background:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;">
         LA PLATEFORME N°1 QUI RÉUNIT EN UN SEUL ENDROIT TOUTES LES OPPORTUNITÉS DES VACANCES AU BURKINA FASO
     </div>
 
@@ -5413,7 +5376,7 @@
 
                 // ---- PAGE 3 : Infos principales + Affiche ----
                 + '<div class="pub-page" id="pubPage3" style="display:none">'
-                + '<div class="pub-field"><label>🏢 Nom de la structure promotrice ou du promoteur <span style="font-size:0.8rem;color:#888;">(nom de la Boutique pour l\'espace Shopping)</span></label><input type="text" id="pubPromoteur" placeholder="Ex: Association Vacances Plus"></div>'
+                + '<div class="pub-field"><label id="pubLabelPromoteur">🏢 Nom de la structure promotrice ou du promoteur</label><input type="text" id="pubPromoteur" placeholder="Ex: Association Vacances Plus"></div>'
                 + '<div class="pub-field"><label>📛 Nom de l\'activité <span style="font-size:0.8rem;color:#888;">(de l\'article : pour l\'espace Shopping)</span></label><input type="text" id="pubNomActivite" placeholder="Ex: Colonies Vacances 2026"></div>'
                 + '<div class="pub-field"><label>📝 Texte de publication</label><textarea id="pubTextePublication" rows="4" placeholder="Décrivez votre activité ou article en quelques phrases..." style="width:100%;padding:10px;border:2px solid rgba(76,175,80,0.3);border-radius:10px;font-size:0.9rem;background:rgba(255,255,255,0.9);color:#333;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea></div>'
                 + '<div class="pub-field"><label>📱 Votre numéro WhatsApp (pour être contacté)</label><div class="phone-input-wrap"><span class="phone-prefix">+226</span><input type="tel" id="pubWhatsappModal" placeholder="XX XX XX XX"></div></div>'
@@ -5493,12 +5456,12 @@
                 + '<div class="pub-tab-content" id="pubTabSuccess" style="display:none;flex-direction:column;gap:12px;padding:10px 0;">'
                 + '<div class="pub-success-msg" id="pubSuccessMsg"></div>'
                 + '<p class="pub-submit-note" id="pubSuccessNote"></p>'
-                + '<div class="pub-fees"><strong>💰 Frais de publication : 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
+                + '<div class="pub-fees"><strong>💰 Tarifs Activités — 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
                 + '<div class="pub-sponsored"><strong>Pour les positions sponsorisées</strong><br>Positionnement fixe de votre activité dans la liste des résultats de recherches et celle des activités disponibles de sa catégorie<br>1ᵉʳ place = 100 000 FCFA ; 50ᵉ place = 2 000 FCFA</div>'
                 + '<button class="pub-pay-btn" id="pubPayBtn2" style="display:none" onclick="showPaymentSection()">Procéder au paiement des frais de publication</button>'
                 + '<div class="pub-section-wrap pub-section-payment" id="pubPaymentSection2" style="display:none">'
                 + '<p class="pub-submit-note">La validation finale de votre publication sera conditionnée par un paiement des frais de publication à l\'étape suivante. Vous pouvez suivre le statut de toutes vos publications dans l\'onglet "Mes publications"</p>'
-                + '<div class="pub-fees"><strong>💰 Frais de publication : 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
+                + '<div class="pub-fees"><strong>💰 Tarifs Activités — 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
                 + '<div class="pub-sponsored"><strong>Pour les positions sponsorisées</strong><br>Positionnement fixe de votre activité dans la liste des résultats de recherches et celle des activités disponibles de sa catégorie<br>1ᵉʳ place = 100 000 FCFA<br>2ᵉ place = 98 000 FCFA<br>3ᵉ place = 96 000 FCFA<br>4ᵉ place = 94 000 FCFA<br>5ᵉ place = 92 000 FCFA<br>...<br>48ᵉ place = 6 000 FCFA<br>49ᵉ place = 4 000 FCFA<br>50ᵉ place = 2 000 FCFA</div>'
                 + '<div class="pub-field"><label>📱 ENTRER votre NUMERO Orangemoney DE TELEPHONE QUI VA EFFECTER LE PAIEMENT</label><div class="phone-input-wrap pay-phone"><span class="phone-prefix">+226</span><input type="tel" id="pubPayPhone2" placeholder="XX XX XX XX"></div></div>'
                 + '<div class="pub-field"><label>💰 ENTRER LE MONTANT DU PAIEMENT (FCFA)</label><div class="amount-input-wrap"><input type="number" id="pubPayAmount2" placeholder="Ex: 2500" min="1"><span class="amount-suffix">FCFA</span></div></div>'
@@ -6065,7 +6028,7 @@
             overlay.innerHTML = '<div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.3);">'
                 + '<div id="payStep1Info">'
                 + '<div class="pub-success-msg" style="font-size:1.05rem;text-align:center;margin-bottom:20px;line-height:1.5;">Procédez au paiement des frais de publication pour valider définitivement votre publication</div>'
-                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>💰 Frais de publication : ' + amount + ' FCFA pour une durée de ' + (amount === 10000 ? '02' : '06') + ' mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
+                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>💰 ' + (amount === 10000 ? 'Tarif Shopping' : 'Tarifs Activités') + ' — ' + amount + ' FCFA pour une durée de ' + (amount === 10000 ? '02' : '06') + ' mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
                 + '<div class="pub-sponsored" style="font-size:0.85rem;line-height:1.6;margin-bottom:8px;"><strong>Pour les positions sponsorisées</strong><br>Positionnement fixe de votre activité dans la liste des résultats de recherches et celle des activités disponibles de sa catégorie<br>1ᵉʳ place = 100 000 FCFA<br>2ᵉ place = 98 000 FCFA<br>3ᵉ place = 96 000 FCFA<br>4ᵉ place = 94 000 FCFA<br>5ᵉ place = 92 000 FCFA<br>...<br>48ᵉ place = 6 000 FCFA<br>49ᵉ place = 4 000 FCFA<br>50ᵉ place = 2 000 FCFA</div>'
                 + '<button class="pub-pay-btn" id="payStep1Btn" style="display:block;margin:20px auto 0;" onclick="document.getElementById(\'payStep1Info\').style.display=\'none\';document.getElementById(\'payStep2\').style.display=\'block\';">Procéder au paiement des frais de publication</button>'
                 + '</div>'
@@ -6300,8 +6263,7 @@
             // Page 3 labels
             var labels = document.querySelectorAll('#pubPage3 .pub-field label');
             if (labels[0]) {
-                var txt0 = labels[0].textContent || labels[0].innerText || '';
-                labels[0].innerHTML = isShop ? '🏢 Nom de la structure promotrice ou du promoteur <span style="font-size:0.8rem;color:#888;">(nom de la Boutique pour l\'espace Shopping)</span>' : '🏢 Nom de la structure promotrice ou du promoteur <span style="font-size:0.8rem;color:#888;">(nom de la Boutique pour l\'espace Shopping)</span>';
+                labels[0].innerHTML = isShop ? '🏢 Nom de la structure promotrice ou du promoteur <span style="font-size:0.8rem;color:#888;">(nom de la Boutique pour l\'espace Shopping)</span>' : '🏢 Nom de la structure promotrice ou du promoteur';
             }
             if (labels[1]) labels[1].innerHTML = isShop ? '📛 Nom de l\'article <span style="font-size:0.8rem;color:#888;">(de l\'article : pour l\'espace Shopping)</span>' : '📛 Nom de l\'activité <span style="font-size:0.8rem;color:#888;">(de l\'article : pour l\'espace Shopping)</span>';
             var nomInput = document.getElementById('pubNomActivite');
@@ -6330,8 +6292,8 @@
             });
             feesEls.forEach(function(el) {
                 el.innerHTML = isShop
-                    ? '<strong>💰 Frais de publication : 10 000 FCFA pour une durée de 02 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos'
-                    : '<strong>💰 Frais de publication : 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos';
+                    ? '<strong>💰 Tarif Shopping — 10 000 FCFA pour une durée de 02 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos'
+                    : '<strong>💰 Tarifs Activités — 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos';
             });
             if (amountEl) amountEl.value = isShop ? '10000' : '2500';
             goToPubPage(3);
@@ -7417,14 +7379,12 @@
             var showMsg = searchVal && certifVal !== 'certified';
             var certifBanner = '';
             if (galleryMode === 'activities' && certifVal !== 'certified') {
-                var bh = document.getElementById('bannerHeader'); if (bh) bh.style.display = '';
                 var bs = document.getElementById('bannerSubtitle'); if (bs) bs.style.display = '';
                 var cs = document.getElementById('catScroll'); if (cs) cs.style.display = '';
                 var gc = document.getElementById('gallery-container'); if (gc) gc.style.paddingTop = '';
                 certifBanner = '<div class="certif-switch-banner"><span class="certif-switch-text">🚫 Publications non certifiées</span><button class="certif-switch-btn" onclick="toggleFilterPanel()">Filtre</button></div>';
             } else if (galleryMode === 'activities' && certifVal === 'certified') {
                 certifBanner = '<div class="certif-switch-banner certif-switch-banner-green"><span class="certif-switch-text">✅ Publications certifiées</span><button class="certif-switch-btn" onclick="toggleFilterPanel()">Filtre</button></div>';
-                var bh = document.getElementById('bannerHeader'); if (bh) bh.style.display = 'none';
                 var bs = document.getElementById('bannerSubtitle'); if (bs) bs.style.display = 'none';
                 var cs = document.getElementById('catScroll'); if (cs) cs.style.display = 'none';
                 var gc = document.getElementById('gallery-container'); if (gc) gc.style.paddingTop = '130px';
@@ -7713,8 +7673,6 @@
             var filterBtn = document.getElementById('filterCategoryBar');
             if (mode === 'shopping') {
                 if (filterBtn) filterBtn.style.display = '';
-                var bh = document.getElementById('bannerHeader');
-                if (bh) bh.style.display = 'none';
                 var bs = document.getElementById('bannerSubtitle');
                 if (bs) bs.style.display = 'none';
                 var shopBanner = '<div class="nouveautes-header">📌 Market-place</div><div class="shopping-publish-banner"><p class="shopping-publish-text">Decouvrez ou publiez ici des articles de commerce : jouets, outils, accessoires, motos électriques, tablettes pour enfants, etc, utiles pour les vacances et les week-ends</p><button class="shopping-publish-btn" onclick="openModalPublier()">📢 Publier</button></div>';
@@ -7733,15 +7691,11 @@
                 var yy = String(d.getFullYear()).slice(-2);
                 var container = document.getElementById('gallery-container');
                 container.innerHTML = '<div class="nouveautes-header">📌 Page des Nouveautés du ' + dd + '/' + mm + '/' + yy + '</div><div style="text-align:center;padding:60px 20px;color:#888;font-size:1rem;">🆕 Aucune nouveauté pour le moment</div>';
-                var bh = document.getElementById('bannerHeader');
-                if (bh) bh.style.display = 'none';
                 var bs = document.getElementById('bannerSubtitle');
                 if (bs) bs.style.display = 'none';
             } else {
                 if (filterBtn) filterBtn.style.display = '';
                 document.getElementById('filterSearchBar').value = '';
-                var bh = document.getElementById('bannerHeader');
-                if (bh) bh.style.display = '';
                 var bs = document.getElementById('bannerSubtitle');
                 if (bs) bs.style.display = '';
                 var cs = document.getElementById('catScroll');
