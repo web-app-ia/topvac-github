@@ -5494,7 +5494,7 @@
                 + '<span style="font-size:0.8rem;color:#888;">\u00D7 3 mois =</span>'
                 + '<span style="font-size:0.9rem;font-weight:700;color:#2e7d32;"><span id="pubTotalNormalDisplay">3 000</span> FCFA</span>'
                 + '</div></div>'
-                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="sponsored" onchange="togglePayFormule()"> <span>\u2B50 Place sponsoris\u00E9e</span></label>'
+                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="sponsored" onchange="togglePayFormule()"> <span>\u2B50 Place sponsoris\u00E9e \u2014 03 mois</span></label>'
                 + '<div id="pubFormuleSponsoredOptions" style="display:none;padding:4px 12px 10px 40px;">'
                 + '<label style="font-size:0.78rem;color:#666;">Choisissez votre position :</label>'
                 + '<select id="pubSponsoredPosition" style="width:100%;padding:7px 8px;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:4px;" onchange="updatePayTotal()"></select>'
@@ -6103,7 +6103,7 @@
             var formuleDetailHtml = '';
             if (formule === 'sponsored') {
                 var sp = getSponsoredPrice(sponsoredPosition);
-                formuleDetailHtml = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 <strong>' + sp.toLocaleString() + ' FCFA</strong>';
+                formuleDetailHtml = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 <strong>' + sp.toLocaleString() + ' FCFA pour 03 mois</strong>';
             } else {
                 var total = amount || ((window._pubPricePerLot || 3000) * nbLots);
                 formuleDetailHtml = '\uD83D\uDCC4 Publication normale \u2014 ' + nbLots + ' lot(s) de 3 mois \u2014 <strong>' + total.toLocaleString() + ' FCFA</strong>';
@@ -6215,7 +6215,7 @@
             if (summaryEl) {
                 if (formule === 'sponsored') {
                     var sp = getSponsoredPrice(sponsoredPosition);
-                    summaryEl.innerHTML = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 ' + sp.toLocaleString() + ' FCFA';
+                    summaryEl.innerHTML = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 ' + sp.toLocaleString() + ' FCFA pour 03 mois';
                 } else {
                     summaryEl.innerHTML = '\uD83D\uDCC4 Publication normale \u2014 ' + priceText + ' \u00D7 ' + nbLots + ' lot(s) = ' + totalAmount.toLocaleString() + ' FCFA';
                 }
@@ -6434,7 +6434,7 @@
                 var p = getSponsoredPrice(i);
                 var opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = i + (i === 1 ? '\u00E8re' : '\u00E8me') + ' place \u2014 ' + p.toLocaleString() + ' FCFA';
+                opt.textContent = i + (i === 1 ? '\u00E8re' : '\u00E8me') + ' place \u2014 ' + p.toLocaleString() + ' FCFA pour 03 mois';
                 sel.appendChild(opt);
             }
             updatePayTotal();
