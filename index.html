@@ -6130,13 +6130,17 @@
                 var total = amount || (pricePerLot * nbLots);
                 formuleDetailHtml = '\uD83D\uDCC4 Publication normale \u2014 <strong>' + pricePerLot.toLocaleString() + ' FCFA / 03 mois</strong> \u00D7 ' + nbLots + ' lot(s) = <strong>' + total.toLocaleString() + ' FCFA</strong>';
             }
-            step1.innerHTML = '<div class="pub-success-msg" style="font-size:1.05rem;text-align:center;margin-bottom:20px;line-height:1.5;">Proc\u00E9dez au paiement des frais de publication pour valider d\u00E9finitivement votre publication</div>'
-                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>\uD83D\uDCB0 ' + label + ' \u2014 ' + pricePerLot.toLocaleString() + ' FCFA / 03 mois</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
-                + '<div class="pub-payment-choice" style="background:#f9fbe7;border-color:#c8e6c9;">'
-                + '<div style="padding:10px 12px;font-size:0.9rem;line-height:1.5;"><strong>Rappel : Formule souscrite lors de votre demande de publication :</strong><br>' + formuleDetailHtml + '</div>'
+            step1.innerHTML = '<div style="text-align:center;margin-bottom:22px;"><div style="font-size:2rem;margin-bottom:6px;">\uD83D\uDCB3</div><div style="font-weight:700;color:#2e7d32;font-size:1.15rem;line-height:1.4;">Paiement des frais de publication</div><div style="color:#666;font-size:0.85rem;line-height:1.4;margin-top:4px;">Validez d\u00E9finitivement votre publication</div></div>'
+                + '<div style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border-radius:14px;padding:18px 16px;margin-bottom:14px;border:1px solid #c8e6c9;">'
+                + '<div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;color:#2e7d32;font-size:1rem;">\uD83D\uDCB0 ' + label + '</span><span style="font-weight:800;color:#e65100;font-size:1.15rem;">' + pricePerLot.toLocaleString() + ' FCFA <span style="font-weight:400;font-size:0.75rem;color:#888;">/ 03 mois</span></span></div>'
+                + '<div style="margin-top:14px;padding-top:12px;border-top:1px dashed #a5d6a7;font-size:0.8rem;color:#555;line-height:1.6;">\u2B50 <strong>Bonus :</strong> Badge de certification &bull; Bouton WhatsApp &bull; Galerie images</div>'
                 + '</div>'
-                + '<button class="pub-pay-btn" id="payStep1Btn" style="display:block;margin:20px auto 0;" onclick="document.getElementById(\'payStep1Info\').style.display=\'none\';document.getElementById(\'payStep2\').style.display=\'block\';">Proc\u00E9der au paiement</button>'
-                + '<div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #e8f5e9;"><button class="pub-nav-btn" id="payStep1Cancel" style="padding:10px 32px;border-radius:20px;font-size:0.85rem;background:#f5f5f5;color:#666;border:1px solid #ddd;cursor:pointer;">Annuler</button></div>';
+                + '<div style="background:#f9fbe7;border:1px solid #e6ee9c;border-radius:14px;padding:14px 16px;margin-bottom:18px;">'
+                + '<div style="font-weight:600;color:#558b2f;font-size:0.85rem;margin-bottom:8px;">\uD83D\uDCCB Rappel de votre demande de publication</div>'
+                + '<div style="font-size:0.92rem;line-height:1.5;color:#333;">' + formuleDetailHtml + '</div>'
+                + '</div>'
+                + '<button class="pub-pay-btn" id="payStep1Btn" style="display:block;margin:0 auto 14px;padding:14px 20px;width:100%;border:none;border-radius:12px;background:linear-gradient(135deg,#43a047,#2e7d32);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(46,125,50,0.3);letter-spacing:0.5px;" onclick="document.getElementById(\'payStep1Info\').style.display=\'none\';document.getElementById(\'payStep2\').style.display=\'block\';">\uD83D\uDCB3 Proc\u00E9der au paiement</button>'
+                + '<div style="text-align:center;"><button class="pub-nav-btn" id="payStep1Cancel" style="padding:10px 32px;border-radius:20px;font-size:0.85rem;background:#f5f5f5;color:#888;border:1px solid #ddd;cursor:pointer;transition:0.2s;" onmouseover="this.style.background=\'#eee\'" onmouseout="this.style.background=\'#f5f5f5\'">Annuler</button></div>';
             var step2 = document.createElement('div');
             step2.id = 'payStep2';
             step2.style.display = 'none';
