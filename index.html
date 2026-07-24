@@ -2832,6 +2832,10 @@
             margin-top: 3px;
             flex-shrink: 0;
         }
+        .pub-radio-choice input[type="radio"]:not(:checked) ~ span {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
         .pub-code {
             background: #e8f5e9;
             padding: 14px 18px;
@@ -3382,6 +3386,7 @@
             top: 0;
             z-index: 10;
             background: #fff;
+            padding-top: 12px;
         }
         .publier-card .publier-header .publier-close {
             background: #c8e6c9;
@@ -4735,7 +4740,7 @@
                     <li>Compétitions de vacances diverses</li>
                     <li>Appuis scolaires</li>
                     <li>Événements / Foires / Festivals</li>
-<li>Activités/formateurs à domiciles : loisirs ou scolaire</li>
+                    <li>Parascolaire regulier (les mercredi, samedi, dimanche)</li>
                 </ul>
 
                 <h3>📞 Contact</h3>
@@ -4780,6 +4785,7 @@
             <span>Appuis scolaires</span>
             <span>Événements / Foires / Festivals</span>
             <span>Activités/formateurs à domiciles : loisirs ou scolaire</span>
+            <span>Parascolaire regulier (les mercredi, samedi, dimanche)</span>
             <span>Ateliers artistiques-brico-créa</span>
             <span>Colonies/ &amp; voyages de vacances</span>
             <span>Bibliothèques</span>
@@ -4789,6 +4795,7 @@
             <span>Appuis scolaires</span>
             <span>Événements / Foires / Festivals</span>
             <span>Activités/formateurs à domiciles : loisirs ou scolaire</span>
+            <span>Parascolaire regulier (les mercredi, samedi, dimanche)</span>
         </div>
     </div>
 
@@ -4899,6 +4906,7 @@
                         <option value="appuis">Appuis scolaires</option>
                         <option value="evenements">Événements / Foires / Festivals</option>
                         <option value="domicile">Activités/formateurs à domiciles : loisirs ou scolaire</option>
+                        <option value="parascolaire">Parascolaire regulier (les mercredi, samedi, dimanche)</option>
                     </select>
                 </div>
 
@@ -5054,6 +5062,7 @@
                     <option value="appuis">Appuis scolaires</option>
                     <option value="evenements">Événements / Foires / Festivals</option>
                     <option value="domicile">Activités/formateurs à domiciles : loisirs ou scolaire</option>
+                    <option value="parascolaire">Parascolaire regulier (les mercredi, samedi, dimanche)</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -5423,7 +5432,7 @@
                 // ---- PAGE 4 : Catégorie ----
                 + '<div class="pub-page" id="pubPage4" style="display:none">'
                 + '<p class="pub-slide-guide">Sélectionnez la catégorie qui correspond le mieux à votre activité.<br><em>Exemple :</em> "Ateliers artistiques" pour du brico-créa, "Colonies" pour des voyages de vacances.</p>'
-                + '<div class="pub-filter-group filter-full"><label>🏷️ Catégorie d\'activité</label><select id="pubCategorie" multiple size="6"><option value="ateliers">Ateliers artistiques-brico-créa</option><option value="colonies">Colonies/ &amp; voyages de vacances</option><option value="bibliotheques">Bibliothèques</option><option value="parcs">Parcs de loisirs / Espaces de loisirs</option><option value="formations">Stages &amp; Formations pour enfants</option><option value="competitions">Compétitions de vacances diverses</option><option value="appuis">Appuis scolaires</option><option value="evenements">Événements / Foires / Festivals</option><option value="domicile">Activités/formateurs à domiciles : loisirs ou scolaire</option></select></div>'
+                + '<div class="pub-filter-group filter-full"><label>🏷️ Catégorie d\'activité</label><select id="pubCategorie" multiple size="6"><option value="ateliers">Ateliers artistiques-brico-créa</option><option value="colonies">Colonies/ &amp; voyages de vacances</option><option value="bibliotheques">Bibliothèques</option><option value="parcs">Parcs de loisirs / Espaces de loisirs</option><option value="formations">Stages &amp; Formations pour enfants</option><option value="competitions">Compétitions de vacances diverses</option><option value="appuis">Appuis scolaires</option><option value="evenements">Événements / Foires / Festivals</option><option value="domicile">Activités/formateurs à domiciles : loisirs ou scolaire</option><option value="parascolaire">Parascolaire regulier (les mercredi, samedi, dimanche)</option></select></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 2 : 3)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(6)">Suivant ▶</button></div>'
                 + '</div>'
 
@@ -6882,7 +6891,8 @@
                 'competitions': 'Compétitions de vacances diverses',
                 'appuis': 'Appuis scolaires',
                 'evenements': 'Événements / Foires / Festivals',
-                'domicile': 'Activités/formateurs à domiciles : loisirs ou scolaire'
+                'domicile': 'Activités/formateurs à domiciles : loisirs ou scolaire',
+                'parascolaire': 'Parascolaire regulier (les mercredi, samedi, dimanche)'
             };
             return map[val] || val;
         }
