@@ -2804,6 +2804,34 @@
             color: #1a237e;
             border: 1px solid #bbdefb;
         }
+        .pub-payment-choice {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 8px;
+        }
+        .pub-radio-choice {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .pub-radio-choice:hover {
+            background: #f5f5f5;
+        }
+        .pub-radio-choice input[type="radio"] {
+            accent-color: #4caf50;
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
         .pub-code {
             background: #e8f5e9;
             padding: 14px 18px;
@@ -5456,15 +5484,16 @@
                 + '<div class="pub-tab-content" id="pubTabSuccess" style="display:none;flex-direction:column;gap:12px;padding:10px 0;">'
                 + '<div class="pub-success-msg" id="pubSuccessMsg"></div>'
                 + '<p class="pub-submit-note" id="pubSuccessNote"></p>'
-                + '<div class="pub-fees"><strong>💰 Tarifs Activités — 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
-                + '<div class="pub-sponsored"><strong>Pour les positions sponsorisées</strong><br>Positionnement fixe de votre activité dans la liste des résultats de recherches et celle des activités disponibles de sa catégorie<br>1ᵉʳ place = 100 000 FCFA ; 50ᵉ place = 2 000 FCFA</div>'
-                + '<button class="pub-pay-btn" id="pubPayBtn2" style="display:none" onclick="showPaymentSection()">Procéder au paiement des frais de publication</button>'
+                + '<div class="pub-fees" id="pubFeesDisplay"><strong>💰 Tarifs Activités — 3 000 FCFA pour 03 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
+                + '<div class="pub-payment-choice">'
+                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="normal" checked> <span>📄 Publication normale — <strong id="pubChoiceNormalPrice">3 000 FCFA</strong> pour 03 mois</span></label>'
+                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="sponsored"> <span>⭐ Place sponsorisée — <strong id="pubChoiceSponsoredPrice">3 000 FCFA</strong> pour 03 mois<br><span style="font-size:0.78rem;color:#666;line-height:1.4;">Positionnement fixe dans les résultats de recherche et la liste des activités disponibles de sa catégorie</span></span></label>'
+                + '</div>'
+                + '<button class="pub-pay-btn" id="pubPayBtn2" style="display:none" onclick="showPaymentSection()">Procéder au paiement</button>'
                 + '<div class="pub-section-wrap pub-section-payment" id="pubPaymentSection2" style="display:none">'
                 + '<p class="pub-submit-note">La validation finale de votre publication sera conditionnée par un paiement des frais de publication à l\'étape suivante. Vous pouvez suivre le statut de toutes vos publications dans l\'onglet "Mes publications"</p>'
-                + '<div class="pub-fees"><strong>💰 Tarifs Activités — 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
-                + '<div class="pub-sponsored"><strong>Pour les positions sponsorisées</strong><br>Positionnement fixe de votre activité dans la liste des résultats de recherches et celle des activités disponibles de sa catégorie<br>1er = 100 000 FCFA | 2e = 98 000 | 3e = 96 000 | 4e = 94 000 | 5e = 92 000 | ... | 48e = 6 000 | 49e = 4 000 | 50e = 2 000 FCFA</div>'
                 + '<div class="pub-field"><label>📱 ENTRER votre NUMERO Orangemoney DE TELEPHONE QUI VA EFFECTER LE PAIEMENT</label><div class="phone-input-wrap pay-phone"><span class="phone-prefix">+226</span><input type="tel" id="pubPayPhone2" placeholder="XX XX XX XX"></div></div>'
-                + '<div class="pub-field"><label>💰 ENTRER LE MONTANT DU PAIEMENT (FCFA)</label><div class="amount-input-wrap"><input type="number" id="pubPayAmount2" placeholder="Ex: 2500" min="1"><span class="amount-suffix">FCFA</span></div></div>'
+                + '<div class="pub-field"><label>💰 ENTRER LE MONTANT DU PAIEMENT (FCFA)</label><div class="amount-input-wrap"><input type="number" id="pubPayAmount2" placeholder="Ex: 3000" min="1"><span class="amount-suffix">FCFA</span></div></div>'
                 + '<button class="pub-envoyer-btn" onclick="envoyerPaiement()">📤 ENVOYER</button>'
                 + '<p style="font-size:0.73rem;color:#888;text-align:center;margin-top:8px;">NB : vous allez être redirigé automatiquement vers le clavier de votre téléphone pour l\'envoi du paiement avec le code *144*2*1*56888879*montant# ENVOIE</p>'
                 + '</div>'
@@ -5993,7 +6022,7 @@
                     }
                     if (!p.certifie && !showPaymentBtn) notes.push('⏳ En attente de publication');
                     var infoNote = notes.length ? '<div style="margin-top:6px;font-size:0.78rem;">' + notes.map(function(n) { return '<span style="display:inline-block;padding:2px 8px;border-radius:10px;margin:2px;background:#fff3e0;color:#e65100;">' + n + '</span>'; }).join('') + '</div>' : '';
-                    var payBtnHtml = showPaymentBtn ? '<div style="margin-top:8px;"><button class="pub-nav-btn" style="background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;" onclick="openPaymentModal(\'' + p.id + '\',' + (p.type === 'shopping' ? 10000 : 2500) + ')">💳 Procéder au paiement</button></div>' : '';
+                    var payBtnHtml = showPaymentBtn ? '<div style="margin-top:8px;"><button class="pub-nav-btn" style="background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;" onclick="openPaymentModal(\'' + p.id + '\',' + (p.type === 'shopping' ? 10000 : 3000) + ')">💳 Procéder au paiement</button></div>' : '';
                     return '<div style="padding:12px 16px;background:#f1f8e9;border-radius:12px;border:1px solid #c8e6c9;margin-bottom:10px;font-size:0.9rem;">' +
                         '<div style="font-weight:600;color:#1b5e20;">' + statusIcon + '</div>' +
                         (p.activity_name ? '<div style="color:#333;margin-top:4px;font-weight:600;">🏷️ ' + escHtml(p.activity_name) + '</div>' : '') +
@@ -6034,10 +6063,16 @@
             modal.appendChild(closeTop);
             var step1 = document.createElement('div');
             step1.id = 'payStep1Info';
+            var isShopModal = amount === 10000;
+            var label = isShopModal ? 'Tarif Shopping' : 'Tarifs Activit\u00E9s';
+            var priceText = isShopModal ? '10 000 FCFA' : '3 000 FCFA';
             step1.innerHTML = '<div class="pub-success-msg" style="font-size:1.05rem;text-align:center;margin-bottom:20px;line-height:1.5;">Proc\u00E9dez au paiement des frais de publication pour valider d\u00E9finitivement votre publication</div>'
-                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>\uD83D\uDCB0 ' + (amount === 10000 ? 'Tarif Shopping' : 'Tarifs Activit\u00E9s') + ' \u2014 ' + amount + ' FCFA pour une dur\u00E9e de ' + (amount === 10000 ? '02' : '06') + ' mois</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
-                + '<div class="pub-sponsored" style="font-size:0.85rem;line-height:1.6;margin-bottom:8px;"><strong>Pour les positions sponsoris\u00E9es</strong><br>Positionnement fixe de votre activit\u00E9 dans la liste des r\u00E9sultats de recherches et celle des activit\u00E9s disponibles de sa cat\u00E9gorie<br>1er = 100 000 FCFA | 2e = 98 000 | 3e = 96 000 | 4e = 94 000 | 5e = 92 000 | ... | 48e = 6 000 | 49e = 4 000 | 50e = 2 000 FCFA</div>'
-                + '<button class="pub-pay-btn" id="payStep1Btn" style="display:block;margin:20px auto 0;" onclick="document.getElementById(\'payStep1Info\').style.display=\'none\';document.getElementById(\'payStep2\').style.display=\'block\';">Proc\u00E9der au paiement des frais de publication</button>'
+                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>\uD83D\uDCB0 ' + label + ' \u2014 ' + amount + ' FCFA pour 03 mois</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
+                + '<div class="pub-payment-choice">'
+                + '<label class="pub-radio-choice"><input type="radio" name="payChoiceModal" value="normal" checked> <span>\uD83D\uDCC4 Publication normale \u2014 <strong>' + priceText + '</strong> pour 03 mois</span></label>'
+                + '<label class="pub-radio-choice"><input type="radio" name="payChoiceModal" value="sponsored"> <span>\u2B50 Place sponsoris\u00E9e \u2014 <strong>' + priceText + '</strong> pour 03 mois<br><span style="font-size:0.78rem;color:#666;line-height:1.4;">Positionnement fixe dans les r\u00E9sultats de recherche et la liste des activit\u00E9s disponibles de sa cat\u00E9gorie</span></span></label>'
+                + '</div>'
+                + '<button class="pub-pay-btn" id="payStep1Btn" style="display:block;margin:20px auto 0;" onclick="document.getElementById(\'payStep1Info\').style.display=\'none\';document.getElementById(\'payStep2\').style.display=\'block\';">Proc\u00E9der au paiement</button>'
                 + '<div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #e8f5e9;"><button class="pub-nav-btn" id="payStep1Cancel" style="padding:10px 32px;border-radius:20px;font-size:0.85rem;background:#f5f5f5;color:#666;border:1px solid #ddd;cursor:pointer;">Annuler</button></div>';
             var step2 = document.createElement('div');
             step2.id = 'payStep2';
@@ -6294,20 +6329,17 @@
                     ? 'Indiquez la localisation de votre article.<br><em>Exemple :</em> Ouagadougou, secteur 4, quartier Dassasgho. Choisissez "En ligne" si l\'article est disponible à distance ou si vous effectuez la livraison.'
                     : 'Indiquez la localisation de votre activité.<br><em>Exemple :</em> Ouagadougou, secteur 4, quartier Dassasgho. Choisissez "En ligne" si l\'activité se déroule à distance.';
             }
-            // Pages sponsorisées textes
-            var sponsoredEls = document.querySelectorAll('.pub-sponsored');
-            sponsoredEls.forEach(function(el) {
-                el.innerHTML = el.innerHTML
-                    .replace(/votre activité/g, isShop ? 'votre article' : 'votre activité')
-                    .replace(/des activités disponibles/g, isShop ? 'des articles disponibles' : 'des activités disponibles')
-                    .replace(/de votre activité/g, isShop ? 'de votre article' : 'de votre activité');
-            });
+            // Mise à jour des prix dans les radios
+            var normalPriceEl = document.getElementById('pubChoiceNormalPrice');
+            var sponsoredPriceEl = document.getElementById('pubChoiceSponsoredPrice');
+            if (normalPriceEl) normalPriceEl.textContent = isShop ? '10 000 FCFA' : '3 000 FCFA';
+            if (sponsoredPriceEl) sponsoredPriceEl.textContent = isShop ? '10 000 FCFA' : '3 000 FCFA';
             feesEls.forEach(function(el) {
                 el.innerHTML = isShop
-                    ? '<strong>💰 Tarif Shopping — 10 000 FCFA pour une durée de 02 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos'
-                    : '<strong>💰 Tarifs Activités — 2 500 FCFA pour une durée de 06 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos';
+                    ? '<strong>💰 Tarif Shopping — 10 000 FCFA pour 03 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos'
+                    : '<strong>💰 Tarifs Activités — 3 000 FCFA pour 03 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos';
             });
-            if (amountEl) amountEl.value = isShop ? '10000' : '2500';
+            if (amountEl) amountEl.value = isShop ? '10000' : '3000';
             goToPubPage(3);
         }
 
