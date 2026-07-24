@@ -6101,15 +6101,16 @@
             var label = isShopModal ? 'Tarif Shopping' : 'Tarifs Activit\u00E9s';
             var priceText = isShopModal ? '10 000 FCFA' : '3 000 FCFA';
             var formuleDetailHtml = '';
+            var pricePerLot = window._pubPricePerLot || (isShopModal ? 10000 : 3000);
             if (formule === 'sponsored') {
                 var sp = getSponsoredPrice(sponsoredPosition);
                 formuleDetailHtml = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 <strong>' + sp.toLocaleString() + ' FCFA pour 03 mois</strong>';
             } else {
-                var total = amount || ((window._pubPricePerLot || 3000) * nbLots);
-                formuleDetailHtml = '\uD83D\uDCC4 Publication normale \u2014 ' + nbLots + ' lot(s) de 3 mois \u2014 <strong>' + total.toLocaleString() + ' FCFA</strong>';
+                var total = amount || (pricePerLot * nbLots);
+                formuleDetailHtml = '\uD83D\uDCC4 Publication normale \u2014 <strong>' + pricePerLot.toLocaleString() + ' FCFA / 03 mois</strong> \u00D7 ' + nbLots + ' lot(s) = <strong>' + total.toLocaleString() + ' FCFA</strong>';
             }
             step1.innerHTML = '<div class="pub-success-msg" style="font-size:1.05rem;text-align:center;margin-bottom:20px;line-height:1.5;">Proc\u00E9dez au paiement des frais de publication pour valider d\u00E9finitivement votre publication</div>'
-                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>\uD83D\uDCB0 ' + label + ' \u2014 ' + amount + ' FCFA</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
+                + '<div class="pub-fees" style="margin-bottom:16px;"><strong>\uD83D\uDCB0 ' + label + ' \u2014 ' + pricePerLot.toLocaleString() + ' FCFA / 03 mois</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
                 + '<div class="pub-payment-choice" style="background:#f9fbe7;border-color:#c8e6c9;">'
                 + '<div style="padding:10px 12px;font-size:0.9rem;line-height:1.5;"><strong>Formule souscrite :</strong><br>' + formuleDetailHtml + '</div>'
                 + '</div>'
