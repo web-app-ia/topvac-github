@@ -3037,10 +3037,9 @@
         .pub-tabs {
             display: flex;
             gap: 4px;
-            background: #f5f5f5;
+            background: #fff;
             border-radius: 12px;
             padding: 4px;
-            margin-bottom: 20px;
         }
         .pub-tab {
             flex: 1;
@@ -6026,7 +6025,9 @@
                     }
                     if (!p.certifie && !showPaymentBtn) notes.push('⏳ En attente de publication');
                     var infoNote = notes.length ? '<div style="margin-top:6px;font-size:0.78rem;">' + notes.map(function(n) { return '<span style="display:inline-block;padding:2px 8px;border-radius:10px;margin:2px;background:#fff3e0;color:#e65100;">' + n + '</span>'; }).join('') + '</div>' : '';
-                    var payBtnHtml = showPaymentBtn ? '<div style="margin-top:8px;"><button class="pub-nav-btn" style="background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;" onclick="openPaymentModal(\'' + p.id + '\',' + (p.type === 'shopping' ? 10000 : 3000) + ')">💳 Procéder au paiement</button></div>' : '';
+                    var pDesc = (function(t) { try { return JSON.parse(t); } catch(e) { return {}; } })(p.description);
+                    var pFormule = (pDesc.meta && pDesc.meta.formule) || 'normal';
+                    var payBtnHtml = showPaymentBtn ? '<div style="margin-top:8px;"><button class="pub-nav-btn" style="background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;" onclick="openPaymentModal(\'' + p.id + '\',' + (p.type === 'shopping' ? 10000 : 3000) + ',\'' + pFormule + '\')">💳 Procéder au paiement</button></div>' : '';
                     return '<div style="padding:12px 16px;background:#f1f8e9;border-radius:12px;border:1px solid #c8e6c9;margin-bottom:10px;font-size:0.9rem;">' +
                         '<div style="font-weight:600;color:#1b5e20;">' + statusIcon + '</div>' +
                         (p.activity_name ? '<div style="color:#333;margin-top:4px;font-weight:600;">🏷️ ' + escHtml(p.activity_name) + '</div>' : '') +
@@ -6054,7 +6055,7 @@
                 body: JSON.stringify(pub)
             }).then(function(r) { return r.json(); });
         }
-        function openPaymentModal(pubId, amount) {
+        function openPaymentModal(pubId, amount, formule) {
             var overlay = document.createElement('div');
             overlay.className = 'modal-overlay';
             overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:100000;display:flex;align-items:center;justify-content:center;';
@@ -6070,11 +6071,12 @@
             var isShopModal = amount === 10000;
             var label = isShopModal ? 'Tarif Shopping' : 'Tarifs Activit\u00E9s';
             var priceText = isShopModal ? '10 000 FCFA' : '3 000 FCFA';
+            var formuleIcon = formule === 'sponsored' ? '\u2B50' : '\uD83D\uDCC4';
+            var formuleLabel = formule === 'sponsored' ? 'Place sponsoris\u00E9e' : 'Publication normale';
             step1.innerHTML = '<div class="pub-success-msg" style="font-size:1.05rem;text-align:center;margin-bottom:20px;line-height:1.5;">Proc\u00E9dez au paiement des frais de publication pour valider d\u00E9finitivement votre publication</div>'
                 + '<div class="pub-fees" style="margin-bottom:16px;"><strong>\uD83D\uDCB0 ' + label + ' \u2014 ' + amount + ' FCFA pour 03 mois</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images</div>'
-                + '<div class="pub-payment-choice">'
-                + '<label class="pub-radio-choice"><input type="radio" name="payChoiceModal" value="normal" checked> <span>\uD83D\uDCC4 Publication normale \u2014 <strong>' + priceText + '</strong> pour 03 mois</span></label>'
-                + '<label class="pub-radio-choice"><input type="radio" name="payChoiceModal" value="sponsored"> <span>\u2B50 Place sponsoris\u00E9e \u2014 <strong>' + priceText + '</strong> pour 03 mois<br><span style="font-size:0.78rem;color:#666;line-height:1.4;">Positionnement fixe dans les r\u00E9sultats de recherche et la liste des activit\u00E9s disponibles de sa cat\u00E9gorie</span></span></label>'
+                + '<div class="pub-payment-choice" style="background:#f9fbe7;border-color:#c8e6c9;">'
+                + '<div style="padding:10px 12px;font-size:0.9rem;line-height:1.5;"><strong>Formule choisie :</strong><br>' + formuleIcon + ' ' + formuleLabel + ' \u2014 <strong>' + priceText + '</strong> pour 03 mois</div>'
                 + '</div>'
                 + '<button class="pub-pay-btn" id="payStep1Btn" style="display:block;margin:20px auto 0;" onclick="document.getElementById(\'payStep1Info\').style.display=\'none\';document.getElementById(\'payStep2\').style.display=\'block\';">Proc\u00E9der au paiement</button>'
                 + '<div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #e8f5e9;"><button class="pub-nav-btn" id="payStep1Cancel" style="padding:10px 32px;border-radius:20px;font-size:0.85rem;background:#f5f5f5;color:#666;border:1px solid #ddd;cursor:pointer;">Annuler</button></div>';
@@ -6162,6 +6164,8 @@
                 end_date: endDate,
                 access: access
             });
+            var payChoiceEl = document.querySelector('input[name="pubPayChoice"]:checked');
+            var formule = payChoiceEl ? payChoiceEl.value : 'normal';
             var btn = document.querySelector('.pub-submit-btn, .pub-valider-btn');
             if (btn) { btn.textContent = '⏳ Envoi en cours...'; btn.disabled = true; }
             saveUserPublication({
@@ -6185,7 +6189,8 @@
                 end_date: endDate,
                 access: access,
                 type: pubType,
-                revendique_id: _revendiquePubId
+                revendique_id: _revendiquePubId,
+                formule: formule
             }).then(function(data) {
                 if (data.success) {
                     var pubId = data.publication ? data.publication.id : null;

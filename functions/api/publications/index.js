@@ -51,7 +51,8 @@ export async function onRequest(context) {
       start_date: body.start_date || '',
       end_date: body.end_date || '',
       status: body.status || 'en_attente',
-      type: metaType
+      type: metaType,
+      formule: body.formule || 'normal'
     };
     if (revendiqueId) descMeta.revendique_id = revendiqueId;
     var plainDesc = body.texte_publication || body.activity_name || '';
