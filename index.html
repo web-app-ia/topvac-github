@@ -5507,7 +5507,7 @@
                 + '<div class="pub-section-title" style="font-weight:700;font-size:0.9rem;color:#2e7d32;margin-bottom:8px;">Choisissez votre formule de paiement</div>'
                 + '<div class="pub-fees" id="pubFeesDisplay"><strong>\uD83D\uDCB0 Tarifs Activit\u00E9s \u2014 3 000 FCFA pour 03 mois</strong><br>\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vid\u00E9os</div>'
                 + '<div class="pub-payment-choice">'
-                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="normal" checked onchange="togglePayFormule()"> <span>\uD83D\uDCC4 Publication normale \u2014 <strong id="pubChoiceNormalPrice">3 000 FCFA</strong> pour 03 mois</span></label>'
+                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="normal" checked onchange="togglePayFormule()"> <span>\uD83D\uDCC4 Publication normale \u2014 <strong id="pubChoiceNormalPrice">3 000 FCFA</strong> pour 03 mois <span style="font-weight:400;font-size:0.75rem;color:#888;">(placement al\u00E9atoire \u00E0 chaque rafra\u00EEchissement dans la galerie de sa cat\u00E9gorie)</span></span></label>'
                 + '<div id="pubFormuleNormalOptions" style="padding:4px 12px 10px 40px;">'
                 + '<label style="font-size:0.78rem;color:#666;">Nombre de lots de 3 mois :</label>'
                 + '<div style="display:flex;align-items:center;gap:6px;margin-top:4px;">'
@@ -5515,7 +5515,7 @@
                 + '<span style="font-size:0.8rem;color:#888;">\u00D7 3 mois =</span>'
                 + '<span style="font-size:0.9rem;font-weight:700;color:#2e7d32;"><span id="pubTotalNormalDisplay">3 000</span> FCFA</span>'
                 + '</div></div>'
-                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="sponsored" onchange="togglePayFormule()"> <span>\u2B50 Place sponsoris\u00E9e \u2014 03 mois</span></label>'
+                + '<label class="pub-radio-choice"><input type="radio" name="pubPayChoice" value="sponsored" onchange="togglePayFormule()"> <span>\u2B50 Place sponsoris\u00E9e \u2014 03 mois <span style="font-weight:400;font-size:0.75rem;color:#888;">(place fixe dans la galerie de sa cat\u00E9gorie)</span></span></label>'
                 + '<div id="pubFormuleSponsoredOptions" style="display:none;padding:4px 12px 10px 40px;">'
                 + '<label style="font-size:0.78rem;color:#666;">Choisissez votre position :</label>'
                 + '<select id="pubSponsoredPosition" style="width:100%;padding:7px 8px;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:4px;max-height:180px;" size="5" onchange="updatePayTotal()"></select>'
@@ -5535,7 +5535,7 @@
                 + '<div class="pub-success-msg" id="pubSuccessMsg"></div>'
                 + '<p class="pub-submit-note" id="pubSuccessNote"></p>'
                 + '<div class="pub-fees" id="pubFeesDisplay"><strong>💰 Tarifs Activités — 3 000 FCFA pour 03 mois</strong><br>⭐ <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vidéos</div>'
-                + '<div class="pub-payment-choice" id="pubSuccessFormuleSummary" style="background:#f9fbe7;border-color:#c8e6c9;padding:12px;font-size:0.85rem;line-height:1.6;"><strong>Formule choisie :</strong><br><span id="pubSuccessFormuleText">📄 Publication normale — 3 000 FCFA pour 03 mois</span></div>'
+                + '<div class="pub-payment-choice" id="pubSuccessFormuleSummary" style="background:#f9fbe7;border-color:#c8e6c9;padding:12px;font-size:0.85rem;line-height:1.6;"><strong>Formule choisie :</strong><br><span id="pubSuccessFormuleText">📄 Publication normale — placement aléatoire à chaque rafraîchissement dans la galerie de sa catégorie — 3 000 FCFA pour 03 mois</span></div>'
                 + '<button class="pub-pay-btn" id="pubPayBtn2" style="display:none" onclick="showPaymentSection()">Procéder au paiement</button>'
                 + '<div class="pub-section-wrap pub-section-payment" id="pubPaymentSection2" style="display:none">'
                 + '<p class="pub-submit-note">La validation finale de votre publication sera conditionnée par un paiement des frais de publication à l\'étape suivante. Vous pouvez suivre le statut de toutes vos publications dans l\'onglet "Mes publications"</p>'
@@ -6266,9 +6266,9 @@
             if (summaryEl) {
                 if (formule === 'sponsored') {
                     var sp = getSponsoredPrice(sponsoredPosition);
-                    summaryEl.innerHTML = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 ' + sp.toLocaleString() + ' FCFA pour 03 mois';
+                    summaryEl.innerHTML = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 place fixe dans la galerie de sa cat\u00E9gorie \u2014 ' + sp.toLocaleString() + ' FCFA pour 03 mois';
                 } else {
-                    summaryEl.innerHTML = '\uD83D\uDCC4 Publication normale \u2014 ' + priceText + ' \u00D7 ' + nbLots + ' lot(s) = ' + totalAmount.toLocaleString() + ' FCFA';
+                    summaryEl.innerHTML = '\uD83D\uDCC4 Publication normale \u2014 placement al\u00E9atoire \u00E0 chaque rafra\u00EEchissement dans la galerie de sa cat\u00E9gorie \u2014 ' + priceText + ' \u00D7 ' + nbLots + ' lot(s) = ' + totalAmount.toLocaleString() + ' FCFA';
                 }
             }
             saveUserPublication({
@@ -7640,7 +7640,16 @@
             }
             html += '</div>';
             if (normalCount === 0 && certifVal === 'certified') {
-                html += '<div style="text-align:center;padding:60px 20px;color:#888;font-size:1rem;">📭 Aucune publication certifiée pour le moment<br><span style="font-size:0.85rem;color:#aaa;">Cette page affichera les publications certifiées dès qu\'elles seront disponibles.</span></div>';
+                html += '<div style="text-align:center;padding:30px 20px 10px;color:#888;font-size:0.9rem;grid-column:1/-1;">📭 Aucune publication certifiée pour le moment<br><span style="font-size:0.78rem;color:#aaa;">Affichage de toutes les publications en attendant.</span></div>';
+                var fallback = (galleryMode === 'shopping' ? window.shoppingAdsData : window.allAdsData) || annonces || [];
+                for (var fi = 0; fi < fallback.length; fi++) {
+                    var fa = fallback[fi];
+                    if (fa.hero) continue;
+                    var img = fa.image || '';
+                    var fbLink = fa.lien || (fa.page_name ? 'detail.html?id=' + encodeURIComponent(fa.id) : '#');
+                    var fbTitle = fa.titre || 'Publication';
+                    html += '<a href="' + fbLink + '" class="gallery-card" data-id="' + (fa.id || '') + '" data-date="' + (fa.date || '') + '"><div class="card-img-wrap"><img src="' + img + '" alt="" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=card-img-fallback>📷</div>\'"></div><div class="card-info"><div class="card-title">' + escHtml(fbTitle) + '</div></div></a>';
+                }
             }
             container.innerHTML = (prependHtml || '') + html;
         }
