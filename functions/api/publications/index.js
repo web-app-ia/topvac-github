@@ -52,7 +52,10 @@ export async function onRequest(context) {
       end_date: body.end_date || '',
       status: body.status || 'en_attente',
       type: metaType,
-      formule: body.formule || 'normal'
+      formule: body.formule || 'normal',
+      nb_lots: body.nb_lots || 1,
+      sponsored_position: body.sponsored_position || null,
+      montant: body.montant || 0
     };
     if (revendiqueId) descMeta.revendique_id = revendiqueId;
     var plainDesc = body.texte_publication || body.activity_name || '';
