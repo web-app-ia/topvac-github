@@ -5507,7 +5507,7 @@
                 + '<div class="pub-section-title" style="font-weight:700;font-size:1rem;color:#2e7d32;margin-bottom:14px;">Choisissez votre formule de paiement</div>'
                 + '<div class="pub-fees" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid #c8e6c9;line-height:1.7;"><strong>\uD83D\uDCB0 Tarifs Activit\u00E9s \u2014 3 000 FCFA pour 03 mois</strong><br><span style="font-size:0.88rem;">\u2B50 <strong>Bonus :</strong> Badge de certification + bouton de redirection WhatsApp + galerie images + galerie vid\u00E9os</span></div>'
                 + '<div class="pub-payment-choice" style="border:1px solid #e0e0e0;border-radius:14px;padding:6px 14px 14px;margin-bottom:16px;background:#fafafa;">'
-                + '<label class="pub-radio-choice" style="display:flex;align-items:flex-start;gap:8px;padding:10px 0 6px;cursor:pointer;border-bottom:1px solid #f0f0f0;"><input type="radio" name="pubPayChoice" value="normal" checked onchange="togglePayFormule()" style="margin-top:3px;"> <span style="flex:1;font-size:0.9rem;"><strong>\uD83D\uDCC4 Publication normale</strong><br><span style="font-weight:600;color:#2e7d32;" id="pubChoiceNormalPrice">3 000 FCFA</span> pour 03 mois <span style="font-weight:400;font-size:0.75rem;color:#888;">(placement al\u00E9atoire \u00E0 chaque rafra\u00EEchissement dans la galerie de sa cat\u00E9gorie)</span></span></label>'
+                + '<label class="pub-radio-choice" style="display:flex;align-items:flex-start;gap:8px;padding:10px 0 6px;cursor:pointer;border-bottom:1px solid #f0f0f0;"><input type="radio" name="pubPayChoice" value="normal" checked onchange="togglePayFormule()" style="margin-top:3px;"> <span style="flex:1;font-size:0.9rem;"><strong>\uD83D\uDCC4 Publication normale</strong><br><span style="font-weight:600;color:#2e7d32;" id="pubChoiceNormalPrice">3 000 FCFA</span> pour 03 mois <span style="font-weight:400;font-size:0.75rem;color:#d32f2f;">(placement al\u00E9atoire \u00E0 chaque rafra\u00EEchissement dans la galerie de sa cat\u00E9gorie)</span></span></label>'
                 + '<div id="pubFormuleNormalOptions" style="padding:8px 12px 10px 36px;border-bottom:1px solid #f0f0f0;">'
                 + '<label style="font-size:0.8rem;color:#666;display:block;margin-bottom:6px;">Nombre de lots de 3 mois :</label>'
                 + '<div style="display:flex;align-items:center;gap:8px;">'
@@ -5515,7 +5515,7 @@
                 + '<span style="font-size:0.85rem;color:#888;">\u00D7 3 mois</span>'
                 + '<span style="font-size:0.9rem;font-weight:700;color:#2e7d32;margin-left:auto;">= <span id="pubTotalNormalDisplay">3 000</span> FCFA</span>'
                 + '</div></div>'
-                + '<label class="pub-radio-choice" style="display:flex;align-items:flex-start;gap:8px;padding:10px 0 6px;cursor:pointer;border-bottom:1px solid #f0f0f0;"><input type="radio" name="pubPayChoice" value="sponsored" onchange="togglePayFormule()" style="margin-top:3px;"> <span style="flex:1;font-size:0.9rem;"><strong>\u2B50 Place sponsoris\u00E9e</strong><br>03 mois <span style="font-weight:400;font-size:0.75rem;color:#888;">(place fixe dans la galerie de sa cat\u00E9gorie)</span></span></label>'
+                + '<label class="pub-radio-choice" style="display:flex;align-items:flex-start;gap:8px;padding:10px 0 6px;cursor:pointer;border-bottom:1px solid #f0f0f0;"><input type="radio" name="pubPayChoice" value="sponsored" onchange="togglePayFormule()" style="margin-top:3px;"> <span style="flex:1;font-size:0.9rem;"><strong>\u2B50 Place sponsoris\u00E9e</strong><br>03 mois <span style="font-weight:400;font-size:0.75rem;color:#d32f2f;">(place fixe dans la galerie de sa cat\u00E9gorie)</span></span></label>'
                 + '<div id="pubFormuleSponsoredOptions" style="display:none;padding:8px 12px 10px 36px;">'
                 + '<label style="font-size:0.8rem;color:#666;display:block;margin-bottom:6px;">Choisissez votre position :</label>'
                 + '<select id="pubSponsoredPosition" style="width:100%;padding:8px;border:1px solid #c8e6c9;border-radius:8px;font-size:0.85rem;background:#fff;max-height:160px;" size="5" onchange="updatePayTotal()"></select>'
@@ -6277,9 +6277,9 @@
             if (summaryEl) {
                 if (formule === 'sponsored') {
                     var sp = getSponsoredPrice(sponsoredPosition);
-                    summaryEl.innerHTML = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 place fixe dans la galerie de sa cat\u00E9gorie \u2014 ' + sp.toLocaleString() + ' FCFA pour 03 mois';
+                    summaryEl.innerHTML = '\u2B50 Place sponsoris\u00E9e \u2014 ' + sponsoredPosition + '\u00E8me place \u2014 <span style="color:#d32f2f;">place fixe dans la galerie de sa cat\u00E9gorie</span> \u2014 ' + sp.toLocaleString() + ' FCFA pour 03 mois';
                 } else {
-                    summaryEl.innerHTML = '\uD83D\uDCC4 Publication normale \u2014 placement al\u00E9atoire \u00E0 chaque rafra\u00EEchissement dans la galerie de sa cat\u00E9gorie \u2014 ' + priceText + ' \u00D7 ' + nbLots + ' lot(s) = ' + totalAmount.toLocaleString() + ' FCFA';
+                    summaryEl.innerHTML = '\uD83D\uDCC4 Publication normale \u2014 <span style="color:#d32f2f;">placement al\u00E9atoire \u00E0 chaque rafra\u00EEchissement dans la galerie de sa cat\u00E9gorie</span> \u2014 ' + priceText + ' \u00D7 ' + nbLots + ' lot(s) = ' + totalAmount.toLocaleString() + ' FCFA';
                 }
             }
             saveUserPublication({
