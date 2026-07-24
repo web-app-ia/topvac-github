@@ -5417,12 +5417,12 @@
                 // ---- PAGE 3 : Infos principales + Affiche ----
                 + '<div class="pub-page" id="pubPage3" style="display:none">'
                 + '<div class="pub-field"><label id="pubLabelPromoteur">🏢 Nom de la structure promotrice ou du promoteur</label><input type="text" id="pubPromoteur" placeholder="Ex: Association Vacances Plus"></div>'
-                + '<div class="pub-field"><label>📛 Nom de l\'activité <span style="font-size:0.8rem;color:#888;">(de l\'article : pour l\'espace Shopping)</span></label><input type="text" id="pubNomActivite" placeholder="Ex: Colonies Vacances 2026"></div>'
-                + '<div class="pub-field"><label>📝 Texte de publication</label><textarea id="pubTextePublication" rows="4" placeholder="Décrivez votre activité ou article en quelques phrases..." style="width:100%;padding:10px;border:2px solid rgba(76,175,80,0.3);border-radius:10px;font-size:0.9rem;background:rgba(255,255,255,0.9);color:#333;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea></div>'
+                + '<div class="pub-field"><label id="pubLabelNomActivite">📛 Nom de l\'activité</label><input type="text" id="pubNomActivite" placeholder="Ex: Colonies Vacances 2026"></div>'
+                + '<div class="pub-field"><label id="pubLabelTextePublication">📝 Texte de publication</label><textarea id="pubTextePublication" rows="4" placeholder="Décrivez votre activité ou article en quelques phrases..." style="width:100%;padding:10px;border:2px solid rgba(76,175,80,0.3);border-radius:10px;font-size:0.9rem;background:rgba(255,255,255,0.9);color:#333;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea></div>'
                 + '<div class="pub-field"><label>📱 Votre numéro WhatsApp (pour être contacté)</label><div class="phone-input-wrap"><span class="phone-prefix">+226</span><input type="tel" id="pubWhatsappModal" placeholder="XX XX XX XX"></div></div>'
                 + '<div style="margin:14px 0 6px;font-weight:600;color:#2e7d32;font-size:0.9rem;">🖼️ Affiche</div>'
                 + '<div class="pub-gallery-section">'
-                + '<div class="pub-gallery-hint">📷 Importer l\'affiche de l\'activité <span style="font-size:0.8rem;color:#888;">(Affiche de l\'article : pour l\'espace Shopping)</span><br><em style="font-size:0.75rem;color:#999;">NB : pas de vidéo</em></div>'
+                + '<div class="pub-gallery-hint"><span id="pubLabelAffiche">📷 Importer l\'affiche de l\'activité</span><br><em style="font-size:0.75rem;color:#999;">NB : pas de vidéo</em></div>'
                 + '<div class="pub-gallery-imgs-preview" id="pubGalleryImgsPreview"></div>'
                 + '<label class="pub-gallery-btn"><input type="file" accept="image/*" onchange="handlePubAffiche(this.files)">📁 Importer une image</label>'
                 + '</div>'
@@ -6376,9 +6376,23 @@
             // Page 3 labels
             var labels = document.querySelectorAll('#pubPage3 .pub-field label');
             if (labels[0]) {
-                labels[0].innerHTML = isShop ? '🏢 Nom de la structure promotrice ou du promoteur <span style="font-size:0.8rem;color:#888;">(nom de la Boutique pour l\'espace Shopping)</span>' : '🏢 Nom de la structure promotrice ou du promoteur';
+                labels[0].innerHTML = isShop ? '🏢 Nom de la boutique' : '🏢 Nom de la structure promotrice ou du promoteur';
             }
-            if (labels[1]) labels[1].innerHTML = isShop ? '📛 Nom de l\'article <span style="font-size:0.8rem;color:#888;">(de l\'article : pour l\'espace Shopping)</span>' : '📛 Nom de l\'activité <span style="font-size:0.8rem;color:#888;">(de l\'article : pour l\'espace Shopping)</span>';
+            var nomLabel = document.getElementById('pubLabelNomActivite');
+            if (nomLabel) nomLabel.innerHTML = isShop ? '📛 Nom de l\'article' : '📛 Nom de l\'activité';
+            var texteLabel = document.getElementById('pubLabelTextePublication');
+            if (texteLabel) {
+                var texteInput = document.getElementById('pubTextePublication');
+                if (isShop) {
+                    texteLabel.innerHTML = '📝 Description de l\'article';
+                    if (texteInput) texteInput.placeholder = 'Décrivez votre article en quelques phrases...';
+                } else {
+                    texteLabel.innerHTML = '📝 Texte de publication';
+                    if (texteInput) texteInput.placeholder = 'Décrivez votre activité ou article en quelques phrases...';
+                }
+            }
+            var afficheLabel = document.getElementById('pubLabelAffiche');
+            if (afficheLabel) afficheLabel.innerHTML = isShop ? '📷 Importer l\'image de l\'article' : '📷 Importer l\'affiche de l\'activité';
             var nomInput = document.getElementById('pubNomActivite');
             if (nomInput) nomInput.placeholder = isShop ? 'Ex: Vélo d\'appartement, Télévision...' : 'Ex: Colonies Vacances 2026';
             // Page 5 (budget) guide
