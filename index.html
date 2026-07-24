@@ -6750,7 +6750,7 @@
                 var countSpan = trigger.querySelector('.trigger-count');
                 var selected = Array.from(select.selectedOptions).map(function(o) { return o.text; });
                 if (selected.length === 0) {
-                    textSpan.textContent = '— Aucun —';
+                    textSpan.textContent = 'Sélectionner une option';
                     textSpan.className = 'trigger-text';
                     countSpan.style.display = 'none';
                 } else if (selected.length <= 2) {
