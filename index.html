@@ -4663,7 +4663,7 @@
             <img src="images/logo.png" alt="TOP VACANCES.BF">
         </button>
         <input type="search" id="filterSearchBar" class="filter-bar-input" placeholder="🔍 Rechercher par mots clés" oninput="debouncedApply()" >
-        <button type="button" id="filterCategoryBar" class="filter-bar-select" onclick="toggleFilterPanel()">Filtre avancé</button>
+        <button type="button" id="filterCategoryBar" class="filter-bar-select" onclick="toggleFilterPanel()">Filtre</button>
         <button class="cart-inline" id="cartFab" onclick="openCartModal()" title="Mon panier">
             🛒
             <span class="badge" id="cartBadge">0</span>
@@ -7608,7 +7608,7 @@
             if (!input || !btn) return;
             var isMobile = window.innerWidth <= 700;
             input.placeholder = isMobile ? '🔍 Rechercher' : '🔍 Rechercher par mots clés';
-            btn.textContent = isMobile ? 'Filtre' : 'Filtre avancé';
+            btn.textContent = 'Filtre';
         }
         adaptFilterBarTexts();
         window.addEventListener('resize', adaptFilterBarTexts);
