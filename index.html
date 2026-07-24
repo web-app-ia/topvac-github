@@ -781,7 +781,7 @@
                         display: flex; flex-direction: column;
                     }
                     .sponsor-modal .sponsor-card .sponsor-close {
-                        background: none; border: none; font-size: 1.8rem; color: #2e7d32; cursor: pointer; padding: 0; line-height: 1;
+                        background: none; border: none; font-size: 1.8rem; color: #2e7d32; cursor: pointer; padding: 0; line-height: 1; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
                     }
                     .sponsor-modal .sponsor-card .sponsor-close:hover { color: #333; }
                     .sponsor-modal .sponsor-card .sponsor-body { padding: 20px 28px 24px; }
@@ -807,7 +807,7 @@
         }
         .admin-card .about-card-header h2 { margin: 0; font-size: 1.15rem; color: #1b5e20; }
         .admin-card .about-close {
-            background: none; border: none; font-size: 2rem; color: #2e7d32; cursor: pointer; padding: 0; line-height: 1;
+            background: none; border: none; font-size: 2rem; color: #2e7d32; cursor: pointer; padding: 0; line-height: 1; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
         }
         .admin-card .about-close:hover { color: #333; }
         .admin-card .about-tabs {
@@ -1111,6 +1111,13 @@
             font-size: 1.5rem;
             color: #2e7d32;
             cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
             line-height: 1;
         }
         .login-modal .login-card .login-close:hover {
@@ -1233,6 +1240,13 @@
             font-size: 1.5rem;
             color: #689f38;
             cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
 
         @media (max-width: 700px) {
@@ -1908,6 +1922,13 @@
             font-size: 1.3rem;
             color: #2e7d32;
             cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
             line-height: 1;
         }
         .mes-boites-panel .panel-close:hover { color: #333; }
@@ -8277,7 +8298,7 @@
         <div class="sponsor-card">
             <div style="padding: 24px 28px 20px; border-bottom: 1px solid #fff3e0; display: flex; align-items: center; justify-content: space-between;">
                 <h2 style="margin: 0; font-size: 1.1rem; color: #e65100; line-height: 1.4; font-weight: 700;" id="sponsorModalTitle">Espace Sponsor</h2>
-                <button class="sponsor-close" onclick="document.getElementById('sponsorModal').classList.remove('active')" style="background: none; border: none; font-size: 1.8rem; color: #2e7d32; cursor: pointer; padding: 0; line-height: 1;">×</button>
+                <button class="sponsor-close" onclick="document.getElementById('sponsorModal').classList.remove('active')" style="background: none; border: none; font-size: 1.8rem; color: #2e7d32; cursor: pointer; padding: 0; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; line-height: 1;">×</button>
             </div>
             <div style="padding: 20px 28px 24px;">
                 <div class="sponsor-msg" id="sponsorModalMsg">
