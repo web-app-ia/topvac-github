@@ -2565,26 +2565,23 @@
             overflow: hidden;
             background: #fafafa;
             width: 100%;
+            aspect-ratio: 4.5 / 1;
         }
         .sponsor-img-wrap img {
             transition: transform 0.3s;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
         }
         .sponsor-img-wrap img:hover {
             transform: scale(1.02);
         }
-        .sponsor-img-desktop { display: block; }
-        .sponsor-img-tablet { display: none; }
-        .sponsor-img-mobile { display: none; }
         @media (min-width: 701px) and (max-width: 1024px) {
-            .sponsor-img-desktop { display: none; }
-            .sponsor-img-tablet { display: block; }
-            .sponsor-img-mobile { display: none; }
+            .sponsor-img-wrap { aspect-ratio: 3.6 / 1; }
         }
         @media (max-width: 700px) {
-            .sponsor-img-desktop { display: none; }
-            .sponsor-img-tablet { display: none; }
-            .sponsor-img-mobile { display: block; }
+            .sponsor-img-wrap { aspect-ratio: 1 / 1; }
         }
         .sponsor-btn {
             margin: 0 14px 14px;
@@ -7528,13 +7525,10 @@
         var _gallerySponsorsCache = [];
 
         function buildSponsorCard(spData) {
-            var imgsHtml = ''
-                + '<img src="images/sponsor_1.png" alt="Sponsor" loading="lazy" class="sponsor-img-desktop" style="width:100%;height:auto;border-radius:8px;background:#f0f0f0;" onerror="this.classList.toggle(\'sponsor-img-desktop\')">'
-                + '<img src="images/sponsor_2.png" alt="Sponsor" loading="lazy" class="sponsor-img-tablet" style="width:100%;height:auto;border-radius:8px;background:#f0f0f0;" onerror="this.classList.toggle(\'sponsor-img-tablet\')">'
-                + '<img src="images/sponsor_3.png" alt="Sponsor" loading="lazy" class="sponsor-img-mobile" style="width:100%;height:auto;border-radius:8px;background:#f0f0f0;" onerror="this.classList.toggle(\'sponsor-img-mobile\')">';
             var headerHtml = '<div class="sponsor-header"><span class="sponsor-header-icon">🌐</span> Sponsorisé</div>';
+            var imgHtml = '<div class="sponsor-img-wrap"><img src="images/sponsor_1.png" alt="Sponsor" loading="lazy" onerror="this.parentNode.innerHTML=\'<div style=aspect-ratio:4.5/1;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-radius:8px;color:#bbb;font-size:0.8rem;>📢</div>\'"></div>';
             var contactBtn = '<button class="sponsor-btn" onclick="openSponsorWhatsApp(event)" style="margin-top:12px;">📞 Contacter le service sponsor</button>';
-            return '<div class="gallery-card sponsor-card"><div class="sponsor-inner">' + headerHtml + '<div class="sponsor-grid"><div class="sponsor-img-wrap">' + imgsHtml + '</div></div>' + contactBtn + '</div></div>';
+            return '<div class="gallery-card sponsor-card"><div class="sponsor-inner">' + headerHtml + '<div class="sponsor-grid">' + imgHtml + '</div>' + contactBtn + '</div></div>';
         }
 
         function buildPlayCard() {
