@@ -786,25 +786,26 @@
                         display: flex; flex-direction: column;
                     }
                      .sponsor-modal .sponsor-card .sponsor-close {
-                         background: #fff; border: 2px solid #e0e0e0; font-size: 1.4rem; color: #666; cursor: pointer; padding: 0; line-height: 1; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0;
+                         background: #fff; border: 2px solid #e0e0e0; font-size: 1.3rem; color: #999; cursor: pointer; padding: 0; line-height: 1; width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0;
                      }
-                     .sponsor-modal .sponsor-card .sponsor-close:hover { border-color: #e65100; color: #e65100; background: #fff3e0; }
-                    .sponsor-modal .sponsor-card .sponsor-body { padding: 20px 28px 24px; }
-                    .sponsor-modal .sponsor-card .sponsor-msg { margin: 0; color: #555; font-size: 0.95rem; line-height: 1.6; }
-                    .sponsor-modal .sponsor-card .sponsor-nb {
-                        margin-top: 14px; padding-top: 14px; border-top: 1px dashed #ffe0b2;
-                        color: #d84315; font-size: 0.85rem; font-weight: 600; line-height: 1.5;
-                    }
-                    .sponsor-modal .sponsor-card .sponsor-btn {
-                        margin-top: 20px; padding: 12px 16px; border: none;
-                        border-radius: 14px; background: linear-gradient(90deg, #ff8f00, #f57c00);
-                        color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer;
-                        transition: 0.3s; display: block; width: 100%; text-align: center;
-                        box-shadow: 0 4px 16px rgba(255,143,0,0.3);
-                    }
-                    .sponsor-modal .sponsor-card .sponsor-btn:hover {
-                        transform: scale(1.02); box-shadow: 0 6px 24px rgba(255,143,0,0.4);
-                    }
+                     .sponsor-modal .sponsor-card .sponsor-close:hover { border-color: #e65100; color: #e65100; background: #fff8e1; }
+                     .sponsor-modal .sponsor-card .sponsor-body { padding: 20px 28px 24px; }
+                     .sponsor-modal .sponsor-card .sponsor-msg { margin: 0; color: #444; font-size: 0.95rem; line-height: 1.7; }
+                     .sponsor-modal .sponsor-card .sponsor-nb {
+                         margin-top: 16px; padding-top: 14px; border-top: 1px solid #f0f0f0;
+                         color: #666; font-size: 0.82rem; font-weight: 500; line-height: 1.6;
+                         display: flex; align-items: flex-start; gap: 8px;
+                     }
+                     .sponsor-modal .sponsor-card .sponsor-btn {
+                         margin-top: 20px; padding: 14px 20px; border: none;
+                         border-radius: 12px; background: linear-gradient(135deg, #ff8f00, #f57c00);
+                         color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+                         transition: 0.25s; display: block; width: 100%; text-align: center;
+                         box-shadow: 0 4px 16px rgba(255,143,0,0.25); letter-spacing: 0.3px;
+                     }
+                     .sponsor-modal .sponsor-card .sponsor-btn:hover {
+                         transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,143,0,0.35);
+                     }
         .admin-card .about-card-header {
             padding: 20px 28px; border-bottom: 1px solid #e8f5e9;
             display: flex; align-items: center; justify-content: space-between;
@@ -8315,20 +8316,23 @@
     <!-- Sponsor Modal -->
     <div id="sponsorModal" class="sponsor-modal">
         <div class="sponsor-card">
-            <div style="padding: 20px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#fff3e0,#ffe0b2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📢</div>
-                    <h2 style="margin:0;font-size:1rem;color:#333;line-height:1.4;font-weight:700;" id="sponsorModalTitle">Vous êtes sur le point de demander a publier une annonce sur l'Espace Sponsor sponsorisée ?</h2>
+            <div style="padding: 20px 24px 16px; border-bottom: 1px solid #f5f5f5; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#fff3e0,#ffe0b2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📢</div>
+                    <h2 style="margin:0;font-size:0.92rem;color:#222;line-height:1.35;font-weight:700;flex:1;min-width:0;" id="sponsorModalTitle">Vous êtes sur le point de demander a publier une annonce sur l'Espace Sponsor sponsorisée ?</h2>
                 </div>
                 <button class="sponsor-close" onclick="document.getElementById('sponsorModal').classList.remove('active')" aria-label="Fermer">×</button>
             </div>
-            <div style="padding: 16px 24px 24px;">
-                <div class="sponsor-msg" id="sponsorModalMsg" style="margin:0;color:#555;font-size:0.95rem;line-height:1.7;">
-                    Voulez-vous contacter ?<br><br>
-                    <span class="sponsor-nb" style="display:block;margin-top:14px;padding-top:14px;border-top:1px dashed #ffe0b2;color:#d84315;font-size:0.85rem;font-weight:600;line-height:1.5;">NB : Pour publier des activités ou un article normale sur la plateforme, cliquez plutôt sur le bouton <strong>Publier</strong> en bas de votre écran.</span>
+            <div style="padding: 20px 24px 24px;">
+                <div style="font-size:0.95rem;color:#444;line-height:1.7;">
+                    Voulez-vous contacter ?
                 </div>
-                <button class="sponsor-btn" onclick="sponsorConfirm(this, true)" style="margin-top:20px;padding:14px 16px;border:none;border-radius:14px;background:linear-gradient(90deg,#ff8f00,#f57c00);color:#fff;font-size:0.95rem;font-weight:700;cursor:pointer;transition:0.3s;display:block;width:100%;text-align:center;box-shadow:0 4px 16px rgba(255,143,0,0.3);">Continuer</button>
-                <p style="margin-top:12px;font-size:0.8rem;color:#999;text-align:center;">Vous serez redirigé vers le service marketing</p>
+                <div class="sponsor-nb" style="margin-top:16px;padding-top:14px;border-top:1px solid #f0f0f0;color:#666;font-size:0.82rem;font-weight:500;line-height:1.6;display:flex;align-items:flex-start;gap:8px;">
+                    <span style="font-size:1rem;flex-shrink:0;">ℹ️</span>
+                    <span>Pour publier des activités ou un article normale sur la plateforme, cliquez plutôt sur le bouton <strong style="color:#2e7d32;">Publier</strong> en bas de votre écran.</span>
+                </div>
+                <button class="sponsor-btn" onclick="sponsorConfirm(this, true)" style="margin-top:20px;padding:14px 20px;border:none;border-radius:12px;background:linear-gradient(135deg,#ff8f00,#f57c00);color:#fff;font-size:0.95rem;font-weight:700;cursor:pointer;transition:0.25s;display:block;width:100%;text-align:center;box-shadow:0 4px 16px rgba(255,143,0,0.25);letter-spacing:0.3px;">Continuer</button>
+                <p style="margin-top:14px;font-size:0.78rem;color:#aaa;text-align:center;">Vous serez redirigé vers le service marketing</p>
             </div>
         </div>
     </div>
