@@ -7532,7 +7532,7 @@
 
         function buildSponsorCard(spData) {
             var headerHtml = '<div class="sponsor-header"><span class="sponsor-header-icon">🌐</span> Sponsorisé</div>';
-            var imgHtml = '<div class="sponsor-img-wrap" onclick="event.stopPropagation();var s=this.querySelector(\'img\');if(s&&s.src)openMediaFullscreen(s.src,\'image\')"><picture><source media="(min-width:1025px)" srcset="images/sponsor_3.png"><source media="(min-width:701px)" srcset="images/sponsor_2.png"><img src="images/sponsor_1.png" alt="Sponsor" loading="lazy" onerror="this.parentNode.innerHTML=\'<div style=aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-radius:8px;color:#bbb;font-size:0.8rem;>📢</div>\'"></picture></div>';
+            var imgHtml = '<div class="sponsor-img-wrap" onclick="event.stopPropagation();var s=this.querySelector(\'img\');if(s&&s.currentSrc)openMediaFullscreen(s.currentSrc,\'image\')"><picture><source media="(min-width:1025px)" srcset="images/sponsor_3.png"><source media="(min-width:701px)" srcset="images/sponsor_2.png"><img src="images/sponsor_1.png" alt="Sponsor" loading="lazy" onerror="this.parentNode.innerHTML=\'<div style=aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-radius:8px;color:#bbb;font-size:0.8rem;>📢</div>\'"></picture></div>';
             var contactBtn = '<button class="sponsor-btn" onclick="openSponsorWhatsApp(event)" style="margin-top:12px;">📞 Contacter le service sponsor</button>';
             return '<div class="gallery-card sponsor-card"><div class="sponsor-inner">' + headerHtml + '<div class="sponsor-grid">' + imgHtml + '</div>' + contactBtn + '</div></div>';
         }
