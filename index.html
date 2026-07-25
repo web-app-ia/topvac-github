@@ -885,7 +885,10 @@
             position: fixed; inset: 0; z-index: 12000;
             background: rgba(0,0,0,0.95); backdrop-filter: blur(8px);
             display: none; align-items: center; justify-content: center;
-            padding: 20px; cursor: zoom-out;
+            padding: 130px 20px 20px; cursor: zoom-out;
+        }
+        @media (max-width: 700px) {
+            .visuel-fullscreen { padding: 100px 10px 10px; }
         }
         .visuel-fullscreen.active { display: flex; }
         .visuel-fullscreen img {
@@ -7613,9 +7616,9 @@
                     + '<h3>' + (a.titre || 'Annonce') + '</h3>'
                     + certifHtml
                     + (a.description ? '<p>' + a.description + '</p>' : '')
+                    + (!a.hero ? '<button class="btn-detail" onclick="event.stopPropagation();openAdDetail(\'' + String(a.id || '').replace(/'/g, "\\'") + '\')">📄 Détails</button>' : '')
                     + '<span class="no-whatsapp-btn">Pas de boutons whatsapp actif</span>'
                     + (footerParts.length ? '<div class="gallery-footer">' + footerParts.join(' &middot; ') + '</div>' : '')
-                    + (!a.hero ? '<button class="btn-detail" onclick="event.stopPropagation();openAdDetail(\'' + String(a.id || '').replace(/'/g, "\\'") + '\')">📄 Détails</button>' : '')
                     + (!a.hero ? '<button class="btn-add-cart" onclick="event.stopPropagation();addToCart(' + JSON.stringify({id: a.id, titre: a.titre || a.page_name, image: a.image || a.creative_image_url || '', description: (a.description || '').slice(0, 100), prix: a.prix || '', lieu: a.lieu || '', whatsapp: a.whatsapp || ''}).replace(/"/g, '&quot;') + ')">🛒 Ajouter au panier</button>' : '')
                     + '</div></div>';
 
