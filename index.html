@@ -2523,11 +2523,12 @@
         /* ---- Sponsor frame ---- */
         .gallery-card.sponsor-card {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, #fff8e1, #ffecb3);
-            border: 2px dashed #ff8f00;
+            background: #fff;
+            border: 1px solid #e0e0e0;
             padding: 0;
             cursor: default;
             overflow: hidden;
+            border-radius: 14px;
         }
         @media (max-width: 700px) {
             .gallery-card.sponsor-card {
@@ -2537,98 +2538,60 @@
         .sponsor-inner {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 20px 16px 24px;
+            padding: 0;
             position: relative;
         }
-        .sponsor-badge {
-            background: #ff8f00;
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 4px 14px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-            flex-shrink: 0;
-        }
-        .sponsor-placeholder {
-            width: 100%;
-            min-height: 160px;
-            background: rgba(255,143,0,0.06);
-            border: 2px dashed rgba(255,143,0,0.35);
-            border-radius: 14px;
+        .sponsor-header {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 28px 16px;
-            transition: 0.2s;
+            gap: 6px;
+            padding: 10px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .sponsor-placeholder:hover {
-            border-color: #ff8f00;
-            background: rgba(255,143,0,0.1);
+        .sponsor-header-icon {
+            font-size: 1rem;
         }
-        .sponsor-icon {
-            font-size: 2.4rem;
-            opacity: 0.7;
+        .sponsor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            padding: 10px 14px;
         }
-        .sponsor-text {
-            font-size: 0.85rem;
-            color: #bf8f00;
-            text-align: center;
-            line-height: 1.4;
-            font-weight: 500;
+        .sponsor-img-wrap {
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fafafa;
         }
-        .sponsor-btn {
-            margin-top: 6px;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(90deg, #ff8f00, #f57c00);
-            color: #fff;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 3px 12px rgba(255,143,0,0.3);
+        .sponsor-img-wrap img {
+            transition: transform 0.3s;
         }
-        .sponsor-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255,143,0,0.4);
-        }
-        @media (min-width: 701px) {
-            .sponsor-inner {
-                flex-direction: row;
-                align-items: center;
-                gap: 16px;
-                padding: 14px 24px;
-            }
-            .sponsor-badge {
-                margin-bottom: 0;
-                white-space: nowrap;
-            }
-            .sponsor-placeholder {
-                flex: 1;
-                flex-direction: row;
-                min-height: 200px;
-                gap: 16px;
-                padding: 16px 24px;
-            }
-            .sponsor-icon { font-size: 1.8rem; flex-shrink: 0; }
-            .sponsor-text { font-size: 0.85rem; }
-            .sponsor-btn {
-                margin-top: 0;
-                flex-shrink: 0;
-                white-space: nowrap;
-            }
+        .sponsor-img-wrap img:hover {
+            transform: scale(1.03);
         }
         @media (max-width: 700px) {
-            .sponsor-inner { padding: 16px 12px 20px; }
-            .sponsor-placeholder { min-height: 130px; padding: 20px 12px; }
-            .sponsor-icon { font-size: 2rem; }
+            .sponsor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .sponsor-btn {
+            margin: 0 14px 14px;
+            padding: 10px 20px;
+            border: 1px solid #ff8f00;
+            border-radius: 30px;
+            background: #fff;
+            color: #e65100;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sponsor-btn:hover {
+            background: #fff8e1;
         }
 
         /* ---- Certification status ---- */
@@ -7557,13 +7520,14 @@
         var _gallerySponsorsCache = [];
 
         function buildSponsorCard(spData) {
-            if (spData && spData.url) {
-                var mediaHtml = spData.type === 'video'
-                    ? '<video src="' + spData.url + '" muted loop autoplay playsinline style="width:100%;max-height:200px;object-fit:cover;border-radius:12px;display:block;"></video>'
-                    : '<img src="' + spData.url + '" alt="Sponsor" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px;display:block;" onerror="this.outerHTML=\'<div class=sponsor-placeholder style=cursor:pointer;onclick=openSponsorWhatsApp(event)><div class=sponsor-icon>📢</div><div class=sponsor-text>Espace Sponsor<br><span style=font-size:0.75rem;color:#bf8f00;>Votre publicité ici</span></div><button class=sponsor-btn>Réserver</button></div>\'">';
-                return '<div class="gallery-card sponsor-card"><div class="sponsor-inner"><span class="sponsor-badge">📌 Sponsor</span>' + mediaHtml + '<button class="sponsor-btn" onclick="openSponsorWhatsApp(event)" style="margin-top:12px;">📞 Contacter le service sponsor</button></div></div>';
-            }
-            return '<div class="gallery-card sponsor-card"><div class="sponsor-inner"><span class="sponsor-badge">📌 Sponsor</span><div class="sponsor-placeholder" style="cursor:pointer;" onclick="openSponsorWhatsApp(event)"><div class="sponsor-icon">📢</div><div class="sponsor-text">Espace Sponsor<br><span style="font-size:0.75rem;color:#bf8f00;">Votre publicité ici</span></div><button class="sponsor-btn">Réservation</button></div></div></div>';
+            var sponsorImages = ['sponsor_1.png', 'sponsor_2.png', 'sponsor_3.png'];
+            var imgsHtml = sponsorImages.map(function(src) {
+                return '<div class="sponsor-img-wrap"><img src="images/' + src + '" alt="Sponsor" loading="lazy" style="width:100%;height:auto;aspect-ratio:1.2/1;object-fit:cover;border-radius:8px;display:block;background:#f0f0f0;" onerror="this.outerHTML=\'<div class=sponsor-img-fallback style=aspect-ratio:1.2/1;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-radius:8px;color:#bbb;font-size:0.8rem;>📢</div>\'"></div>';
+            }).join('');
+            var headerHtml = '<div class="sponsor-header"><span class="sponsor-header-icon">🌐</span> Sponsorisé</div>';
+            var contactBtn = '<button class="sponsor-btn" onclick="openSponsorWhatsApp(event)" style="margin-top:12px;">📞 Contacter le service sponsor</button>';
+            var responsiveGrid = '<div class="sponsor-grid">' + imgsHtml + '</div>';
+            return '<div class="gallery-card sponsor-card"><div class="sponsor-inner">' + headerHtml + responsiveGrid + contactBtn + '</div></div>';
         }
 
         function buildPlayCard() {
