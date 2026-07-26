@@ -8,10 +8,13 @@ export async function onRequest(context) {
 
   if (request.method === 'GET') {
     const user = await getUserFromRequest(request, env);
+    const mine = url.searchParams.get('mine') === 'true';
     const all = await env.DB.prepare(
       user
         ? 'SELECT * FROM publications WHERE auteur_id = ? ORDER BY created_at DESC'
-        : 'SELECT * FROM publications ORDER BY created_at DESC'
+        : mine
+          ? 'SELECT * FROM publications WHERE 1=0'
+          : 'SELECT * FROM publications ORDER BY created_at DESC'
     ).bind(...(user ? [user.id] : [])).all();
     const publications = (all.results || []).map(function(p) {
       return {

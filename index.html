@@ -6106,7 +6106,7 @@
             });
         }
         function getUserPublications() {
-            return fetch('/api/publications', { headers: getAuthHeaders() })
+            return fetch('/api/publications?mine=true', { headers: getAuthHeaders() })
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.success) return data.publications || [];
