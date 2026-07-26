@@ -174,14 +174,13 @@
         }
         .btn-add:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(46,125,50,0.3); }
 
-        .table-wrap { overflow-x: auto; min-width: 100%; }
-        .table-wrap > table { min-width: 1400px; }
-        .table-top-scroll { overflow-x: auto; height: 12px; margin-bottom: 0; }
+        .table-wrap { overflow: visible; width: 100%; }
+        .table-top-scroll { display: none; }
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8rem;
-            white-space: nowrap;
+            white-space: normal;
         }
         th {
             text-align: left;
@@ -203,9 +202,10 @@
             text-overflow: ellipsis;
         }
         tr:hover td { background: #fafff5; }
-        td:first-child, th:first-child { width: 36px; text-align: center; }
-        td:last-child, th:last-child { width: 50px; text-align: center; }
+        td:nth-child(2), th:nth-child(2) { width: 36px; text-align: center; }
+        td:last-child, th:last-child { width: 120px; white-space: nowrap; text-align: center; }
         td input[type="checkbox"] { width: 16px; height: 16px; accent-color: #4caf50; cursor: pointer; }
+        td:first-child { font-size: 0.75rem; font-weight: 600; color: #e65100; white-space: nowrap; }
         .del-single {
             background: none;
             border: none;
@@ -466,17 +466,14 @@
                         <thead><tr>
                             <th>📱 OM</th>
                             <th></th>
-                            <th>#</th>
                             <th>Image</th>
                             <th>Titre</th>
                             <th>Date</th>
-                            <th>Type</th>
                             <th>Statut</th>
-                            <th>WhatsApp</th>
                             <th>Email</th>
                             <th></th>
                         </tr></thead>
-                        <tbody id="pubsBody"><tr><td colspan="11" class="empty-state">Aucune publication</td></tr></tbody>
+                        <tbody id="pubsBody"><tr><td colspan="8" class="empty-state">Aucune publication</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -500,21 +497,16 @@
                 </div>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr>
+                         <thead><tr>
                             <th>📱 OM</th>
                             <th></th>
-                            <th>#</th>
-                            <th>Lien / Source</th>
-                            <th>WhatsApp</th>
-                            <th>Type</th>
-                            <th>Catégorie</th>
                             <th>Statut</th>
                             <th>Revendique</th>
                             <th>Date</th>
                             <th>Email</th>
                             <th></th>
                         </tr></thead>
-                        <tbody id="subsBody"><tr><td colspan="12" class="empty-state">Aucune soumission</td></tr></tbody>
+                        <tbody id="subsBody"><tr><td colspan="7" class="empty-state">Aucune soumission</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -666,34 +658,27 @@
             document.getElementById('pubsCounter').textContent = list.length + ' publication(s)';
             var tbody = document.getElementById('pubsBody');
             if (!list.length) {
-                tbody.innerHTML = '<tr><td colspan="12" class="empty-state">Aucune publication</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Aucune publication</td></tr>';
                 return;
             }
-            tbody.innerHTML = list.map(function(p, i) {
+            tbody.innerHTML = list.map(function(p) {
                 var img = p.image || p.creative_image_url || '';
                 var imgHtml = img ? '<img src="' + img + '" style="width:50px;height:40px;object-fit:cover;border-radius:6px;" onerror="this.style.display=\'none\'">' : '—';
                 var published = p.certifie;
                 var status = published ? '<span class="badge badge-green">✅ Certifié</span>' : '<span class="badge badge-orange">⏳ En attente</span>';
-                var whatsapp = p.whatsapp || '—';
-                var typeLabel = p.type === 'shopping' ? '<span class="badge badge-blue">Shopping</span>' : '<span class="badge badge-green">Activités</span>';
                 var omNumber = p.payment_status === 'validated' && p.payment_phone ? escHtml(p.payment_phone) : '—';
                 return '<tr>'
                     + '<td style="font-size:0.75rem;font-weight:600;color:#e65100;">' + omNumber + '</td>'
                     + '<td><input type="checkbox" class="ck-pubs" value="' + p.id + '"></td>'
-                    + '<td>' + (i + 1) + '</td>'
                     + '<td>' + imgHtml + '</td>'
                     + '<td style="max-width:160px;">' + escHtml(p.titre || p.page_name || 'Sans titre') + '</td>'
                     + '<td>' + (p.date || p.delivery_start_time || '—') + '</td>'
-                    + '<td>' + typeLabel + '</td>'
                     + '<td>' + status + '</td>'
-                    + '<td style="max-width:140px;">' + escHtml(whatsapp) + '</td>'
-                    + '<td style="max-width:160px;font-size:0.8rem;">' + escHtml(p.auteur_email || '—') + '</td>'
+                    + '<td style="font-size:0.8rem;">' + escHtml(p.auteur_email || '—') + '</td>'
                     + '<td style="white-space:nowrap;">' + galleryBtn(p.id) + ' <button class="btn-action" onclick="showPubDossier(\'' + p.id + '\')" title="Voir le dossier complet">📄</button> <button class="del-single" onclick="deleteSingle(\'pubs\',\'' + p.id + '\')" title="Supprimer">✕</button></td>'
                     + '</tr>';
             }).join('');
-            setTimeout(syncTopScrollbars, 10);
         }
-
         function confirmReject(id, action, label) {
             if (confirm('❌ Rejeter le ' + label + ' de cette publication ?\n\nMessage standard : Le ' + label.toLowerCase() + ' n\'est pas conforme aux objectifs de la plateforme Topvacances.bf. Consultez le résumé complet du dossier pour plus de détails.')) {
                 updateStatus(id, action);
@@ -751,10 +736,10 @@
             document.getElementById('subsCounter').textContent = list.length + ' soumission(s)';
             var tbody = document.getElementById('subsBody');
             if (!list.length) {
-                tbody.innerHTML = '<tr><td colspan="12" class="empty-state">Aucune soumission</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Aucune soumission</td></tr>';
                 return;
             }
-            tbody.innerHTML = list.map(function(s, i) {
+            tbody.innerHTML = list.map(function(s) {
                 var d = parseDesc(s);
                 var meta = d.meta || d;
                 var revendiqueId = meta.revendique_id || null;
@@ -762,8 +747,6 @@
                     ? '<span class="badge badge-green">✅ Certifié</span>'
                     : '<span class="badge badge-orange">⏳ En attente</span>';
                 var typeLabel = (meta.type || 'publier') === 'revendiquer' ? '🔄 Revendiquer' : '📢 Publier';
-                var whatsapp = s.whatsapp || '—';
-                var categorie = meta.categorie || '—';
                 var payDone = s.payment_status === 'validated';
                 var contentDone = s.content_status === 'validated';
                 var payRejected = s.payment_status === 'rejected';
@@ -772,24 +755,16 @@
                 var payBtn = payDone ? '<span class="badge badge-green" style="font-size:0.7rem;">💳 OK</span>' : (payRejected ? '<span class="badge badge-red" style="font-size:0.7rem;">💳 Non</span>' : '<button class="btn-action btn-xs" onclick="updateStatus(\'' + s.id + '\',\'payment_validated\')" title="Paiement OK">💳</button><button class="btn-action btn-xs btn-reject" onclick="confirmReject(\'' + s.id + '\',\'payment_rejected\',\'Paiement\')" title="Rejeter paiement">❌</button>');
                 var contentBtn = contentDone ? '<span class="badge badge-green" style="font-size:0.7rem;">📝 OK</span>' : (contentRejected ? '<span class="badge badge-red" style="font-size:0.7rem;">📝 Non</span>' : '<button class="btn-action btn-xs" onclick="updateStatus(\'' + s.id + '\',\'content_validated\')" title="Contenu OK">📝</button><button class="btn-action btn-xs btn-reject" onclick="confirmReject(\'' + s.id + '\',\'content_rejected\',\'Contenu\')" title="Rejeter contenu">❌</button>');
                 var publishBtn = published ? '<span class="badge badge-green" style="font-size:0.7rem;">🚀 OK</span>' : '<button class="btn-action btn-xs btn-publish" onclick="updateStatus(\'' + s.id + '\',\'publish\')" title="Publier">🚀</button>';
-                var shopTypeLabel = s.type === 'shopping' ? '<span class="badge badge-blue">Shopping</span>' : '<span class="badge badge-green">Activités</span>';
                 var omNumber = payDone && s.payment_phone ? escHtml(s.payment_phone) : '—';
                 return '<tr>'
                     + '<td style="font-size:0.75rem;font-weight:600;color:#e65100;">' + omNumber + '</td>'
                     + '<td><input type="checkbox" class="ck-subs" value="' + s.id + '"></td>'
-                    + '<td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;" title="' + escHtml(s.id) + '">' + escHtml(s.id) + '</td>'
-                    + '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;" title="' + escHtml(s.lien || '') + '">' + escHtml(s.lien || '—') + '</td>'
-                    + '<td>' + escHtml(whatsapp) + '</td>'
-                    + '<td>' + shopTypeLabel + '</td>'
-                    + '<td>' + escHtml(categorie) + '</td>'
                     + '<td>' + status + '<br><span style="font-size:0.7rem;color:#999;">' + typeLabel + '</span></td>'
                     + '<td style="font-size:0.8rem;">' + (revendiqueId ? escHtml(revendiqueId) : '—') + '</td>'
                     + '<td>' + (s.date || s.created_at || '—') + '</td>'
                     + '<td style="font-size:0.8rem;">' + escHtml(s.auteur_email || '—') + '</td>'
                     + '<td style="white-space:nowrap;">' + galleryBtn(s.id) + '<button class="btn-action btn-xs" onclick="showPubDossier(\'' + s.id + '\')" title="Dossier">📄</button>' + payBtn + contentBtn + publishBtn + '<button class="del-single" onclick="deleteSingle(\'subs\',\'' + s.id + '\')" title="Supprimer">✕</button></td>'
                     + '</tr>';
-            }).join('');
-            setTimeout(syncTopScrollbars, 10);
         }
 
         async function updateStatus(id, action) {
