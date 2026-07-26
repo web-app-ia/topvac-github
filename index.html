@@ -8285,6 +8285,14 @@
             try { shoppingAdsData = JSON.parse(localStorage.getItem('tv_pubs_shopping') || '[]'); } catch(e) {}
             shoppingAdsData = shoppingAdsData.filter(function(p) { return p.image && p.image.indexOf('http') !== 0; });
             try { localStorage.setItem('tv_pubs_shopping', JSON.stringify(shoppingAdsData)); } catch(e) {}
+            if (!shoppingAdsData.length) {
+                shoppingAdsData = [
+                    {id:'shop_1',titre:'Africa Moto Services',page_name:'Vélo moteur électrique King',description:'Vélo moteur électrique King prix 395.000f — Livraison gratuite à Ouaga — Livraison partout au Burkina Faso — Batterie Lithium — Autonomie: 100km — 4 vitesses — Marche arrière — WHATSAPP : 58 55 55 77 / 50220135 / 55343333',image:'images/653715341_1518701900260673_1688172026508704322_n.jpg',creative_image_url:'images/653715341_1518701900260673_1688172026508704322_n.jpg',tags:[],date:'2026-07-26',delivery_start_time:'',lien:'',certifie:false,whatsapp:'+22658555577',prix:'395 000 FCFA',lieu:'Ouagadougou'},
+                    {id:'shop_2',titre:'Is Communication',page_name:'Tablettes Enfants',description:'🧒📱 TABLETTES ENFANTS — Offrez plus qu\'une tablette, offrez un compagnon d\'apprentissage et de divertissement ! 🧩 Jeux éducatifs — 📚 Apprentissage interactif — 🎨 Écran adapté aux enfants — 🛡️ Conçues pour les petits explorateurs — 🎁 Offres disponibles ce mois-ci – idéal pour faire plaisir et apprendre en s\'amusant ! 📲 Disponible dès maintenant – stock limité.',image:'images/706317817_998508512931023_3783466675934789691_n.jpg',creative_image_url:'images/706317817_998508512931023_3783466675934789691_n.jpg',tags:[],date:'2026-07-26',delivery_start_time:'',lien:'',certifie:false,whatsapp:''},
+                    {id:'shop_3',titre:'ABDOUL TELECOM',page_name:'Tablettes Éducatives Prix Cassés',description:'🔥📚 PROMO VACANCES – TABLETTES ÉDUCATIVES À PRIX CASSÉS ! 📚🔥 Parents, ne laissez pas vos enfants passer les vacances sans apprendre ! 🚀 💥 Tablettes éducatives disponibles à des prix incroyables 💥 Apprentissage + Jeux = Vacances intelligentes 💥 Stock limité, premiers arrivés, premiers servis ! 🎁 Offres spéciales vacances en cours ! 📲 Inbox ou WhatsApp pour réserver la vôtre dès maintenant. 📍 Disponible chez Abdoul Telecom — Contact : 53 53 53 53 / 57575744 — Ouagadougou : zaabr daaga derrière la banque BCB',image:'images/727408124_1543535137277803_1740909530404676483_n.png',creative_image_url:'images/727408124_1543535137277803_1740909530404676483_n.png',tags:[],date:'2026-07-26',delivery_start_time:'',lien:'',certifie:false,whatsapp:'+22653535353',prix:'Promo',lieu:'Ouagadougou — zaabr daaga derrière la banque BCB'}
+                ];
+                try { localStorage.setItem('tv_pubs_shopping', JSON.stringify(shoppingAdsData)); } catch(e) {}
+            }
 
             if (localPubs.length) {
                 allAdsData = localPubs;
