@@ -464,6 +464,7 @@
                 <div class="table-wrap">
                     <table>
                         <thead><tr>
+                            <th>📱 OM</th>
                             <th></th>
                             <th>#</th>
                             <th>Image</th>
@@ -500,6 +501,7 @@
                 <div class="table-wrap">
                     <table>
                         <thead><tr>
+                            <th>📱 OM</th>
                             <th></th>
                             <th>#</th>
                             <th>Lien / Source</th>
@@ -512,7 +514,7 @@
                             <th>Email</th>
                             <th></th>
                         </tr></thead>
-                        <tbody id="subsBody"><tr><td colspan="11" class="empty-state">Aucune soumission</td></tr></tbody>
+                        <tbody id="subsBody"><tr><td colspan="12" class="empty-state">Aucune soumission</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -664,7 +666,7 @@
             document.getElementById('pubsCounter').textContent = list.length + ' publication(s)';
             var tbody = document.getElementById('pubsBody');
             if (!list.length) {
-                tbody.innerHTML = '<tr><td colspan="11" class="empty-state">Aucune publication</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="12" class="empty-state">Aucune publication</td></tr>';
                 return;
             }
             tbody.innerHTML = list.map(function(p, i) {
@@ -674,7 +676,9 @@
                 var status = published ? '<span class="badge badge-green">✅ Certifié</span>' : '<span class="badge badge-orange">⏳ En attente</span>';
                 var whatsapp = p.whatsapp || '—';
                 var typeLabel = p.type === 'shopping' ? '<span class="badge badge-blue">Shopping</span>' : '<span class="badge badge-green">Activités</span>';
+                var omNumber = p.payment_status === 'validated' && p.payment_phone ? escHtml(p.payment_phone) : '—';
                 return '<tr>'
+                    + '<td style="font-size:0.75rem;font-weight:600;color:#e65100;">' + omNumber + '</td>'
                     + '<td><input type="checkbox" class="ck-pubs" value="' + p.id + '"></td>'
                     + '<td>' + (i + 1) + '</td>'
                     + '<td>' + imgHtml + '</td>'
@@ -697,6 +701,7 @@
         }
         function showPubDossier(id) {
             var p = _data.pubs ? _data.pubs.find(function(x) { return String(x.id) === String(id); }) : null;
+            if (!p) p = _data.subs ? _data.subs.find(function(x) { return String(x.id) === String(id); }) : null;
             if (!p) { toast('❌ Publication introuvable'); return; }
             var d = parseDesc(p);
             var meta = d.meta || d;
@@ -715,6 +720,7 @@
             lines.push(row('Email auteur', p.auteur_email));
             lines.push(row('Statut', p.certifie ? '✅ Certifié' : '⏳ En attente'));
             lines.push(row('Paiement', p.payment_status === 'validated' ? '✅ Validé' : p.payment_status === 'rejected' ? '❌ Rejeté' : '⏳ En attente'));
+            if (p.payment_phone) lines.push(row('📱 OM payeur', p.payment_phone));
             lines.push(row('Contenu', p.content_status === 'validated' ? '✅ Validé' : p.content_status === 'rejected' ? '❌ Rejeté' : '⏳ En attente'));
             if (meta.categorie) lines.push(row('Catégorie', meta.categorie));
             if (meta.ville) lines.push(row('Ville', meta.ville));
@@ -767,7 +773,9 @@
                 var contentBtn = contentDone ? '<span class="badge badge-green" style="font-size:0.7rem;">📝 OK</span>' : (contentRejected ? '<span class="badge badge-red" style="font-size:0.7rem;">📝 Non</span>' : '<button class="btn-action btn-xs" onclick="updateStatus(\'' + s.id + '\',\'content_validated\')" title="Contenu OK">📝</button><button class="btn-action btn-xs btn-reject" onclick="confirmReject(\'' + s.id + '\',\'content_rejected\',\'Contenu\')" title="Rejeter contenu">❌</button>');
                 var publishBtn = published ? '<span class="badge badge-green" style="font-size:0.7rem;">🚀 OK</span>' : '<button class="btn-action btn-xs btn-publish" onclick="updateStatus(\'' + s.id + '\',\'publish\')" title="Publier">🚀</button>';
                 var shopTypeLabel = s.type === 'shopping' ? '<span class="badge badge-blue">Shopping</span>' : '<span class="badge badge-green">Activités</span>';
+                var omNumber = payDone && s.payment_phone ? escHtml(s.payment_phone) : '—';
                 return '<tr>'
+                    + '<td style="font-size:0.75rem;font-weight:600;color:#e65100;">' + omNumber + '</td>'
                     + '<td><input type="checkbox" class="ck-subs" value="' + s.id + '"></td>'
                     + '<td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;" title="' + escHtml(s.id) + '">' + escHtml(s.id) + '</td>'
                     + '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;" title="' + escHtml(s.lien || '') + '">' + escHtml(s.lien || '—') + '</td>'

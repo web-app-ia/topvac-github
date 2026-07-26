@@ -6215,6 +6215,12 @@
             var amountInput = document.getElementById('payModalAmountInput');
             var amount = (amountInput ? amountInput.value : '').trim();
             if (!amount || isNaN(amount) || amount <= 0) { toast('❌ Veuillez entrer un montant valide'); return; }
+            // Save payer's OM phone number before USSD redirect
+            fetch('/api/pubs/' + encodeURIComponent(pubId), {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ payment_phone: '+226' + phoneVal })
+            }).catch(function() {});
             // Redirect to USSD payment
             var code = '*144*2*1*56888879*' + amount + '%23';
             window.location.href = 'tel:' + code;

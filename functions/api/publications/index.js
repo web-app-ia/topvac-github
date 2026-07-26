@@ -62,7 +62,7 @@ export async function onRequest(context) {
     if (body.categorie) plainDesc += ' — ' + body.categorie;
     if (body.ville) plainDesc += ' — ' + body.ville;
     await env.DB.prepare(
-      `INSERT INTO publications (id, titre, page_name, activity_name, description, date, lien, certifie, whatsapp, prix, lieu, image, auteur_id, type) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+      `INSERT INTO publications (id, titre, page_name, activity_name, description, date, lien, certifie, whatsapp, prix, lieu, image, auteur_id, type, promoteur, texte_publication, accessibilite, payment_phone) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
     ).bind(
       id,
       body.promoteur || body.titre || body.page_name || 'Soumission #' + id,
@@ -77,7 +77,11 @@ export async function onRequest(context) {
       body.lieu || '',
       body.image || '',
       user.id,
-      pubType
+      pubType,
+      body.promoteur || '',
+      body.texte_publication || '',
+      Array.isArray(body.access) ? body.access.join(',') : (body.access || ''),
+      body.payment_phone || ''
     ).run();
     return success({ publication: { id, ...body, status: 'en_attente', created_at: new Date().toISOString() } });
   }

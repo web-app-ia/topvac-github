@@ -16,7 +16,27 @@ export async function onRequest(context) {
     const user = await requireUser(request, env);
     if (!user) return error('Non authentifié', 401);
     const body = await request.json();
-    await env.DB.prepare(`UPDATE publications SET titre=?, page_name=?, description=?, image=?, creative_image_url=?, tags=?, date=?, delivery_start_time=?, lien=?, certifie=?, whatsapp=?, prix=?, lieu=?, facebook=?, tiktok=?, site_web=?, hero=?, updated_at=datetime('now') WHERE id=?`).bind(body.titre || '', body.page_name || '', body.description || '', body.image || '', body.creative_image_url || '', JSON.stringify(body.tags || []), body.date || '', body.delivery_start_time || '', body.lien || '', body.certifie ? 1 : 0, body.whatsapp || '', body.prix || '', body.lieu || '', body.facebook || '', body.tiktok || '', body.site_web || '', body.hero ? 1 : 0, id).run();
+    // Partial update: only fields present in body are updated
+    var sets = [];
+    var vals = [];
+    var fields = ['titre','page_name','description','image','creative_image_url','tags','date','delivery_start_time','lien','certifie','whatsapp','prix','lieu','facebook','tiktok','site_web','hero','promoteur','texte_publication','accessibilite','payment_phone'];
+    for (var i = 0; i < fields.length; i++) {
+      var f = fields[i];
+      if (body[f] !== undefined) {
+        sets.push(f + '=?');
+        if (f === 'tags') {
+          vals.push(JSON.stringify(body[f] || []));
+        } else if (f === 'certifie' || f === 'hero') {
+          vals.push(body[f] ? 1 : 0);
+        } else {
+          vals.push(body[f] || '');
+        }
+      }
+    }
+    if (sets.length) {
+      sets.push("updated_at=datetime('now')");
+      await env.DB.prepare('UPDATE publications SET ' + sets.join(',') + ' WHERE id=?').bind(...vals, id).run();
+    }
     return success({ ad: { id, ...body } });
   }
 
