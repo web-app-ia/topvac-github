@@ -765,6 +765,7 @@
                     + '<td style="font-size:0.8rem;">' + escHtml(s.auteur_email || '—') + '</td>'
                     + '<td style="white-space:nowrap;">' + galleryBtn(s.id) + '<button class="btn-action btn-xs" onclick="showPubDossier(\'' + s.id + '\')" title="Dossier">📄</button>' + payBtn + contentBtn + publishBtn + '<button class="del-single" onclick="deleteSingle(\'subs\',\'' + s.id + '\')" title="Supprimer">✕</button></td>'
                     + '</tr>';
+            }).join('');
         }
 
         async function updateStatus(id, action) {
