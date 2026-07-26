@@ -444,6 +444,7 @@
             <button class="tab active" data-tab="tabPubs" onclick="switchTab('tabPubs', this)">📢 Publications</button>
             <button class="tab" data-tab="tabSoumissions" onclick="switchTab('tabSoumissions', this)">📋 Soumissions</button>
             <button class="tab" data-tab="tabSponsor" onclick="switchTab('tabSponsor', this)">📸 Sponsor</button>
+            <button class="tab" data-tab="tabModifs" onclick="switchTab('tabModifs', this)" id="tabBtnModifs" style="display:none">✏️ Modifications</button>
         </div>
 
         <!-- ==================== TAB 1: PUBLICATIONS ==================== -->
@@ -544,6 +545,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- ==================== TAB 4: MODIFICATIONS ==================== -->
+        <div class="panel" id="tabModifs">
+            <div class="panel-card">
+                <div class="panel-title">✏️ Demandes de modification</div>
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <span class="counter" id="modifsCounter">0 modification(s)</span>
+                        <input type="search" class="search-input" id="searchModifs" placeholder="Rechercher..." oninput="renderModifs()">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-primary" onclick="exportJSON('modifs')">📥 Exporter JSON</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr>
+                            <th>ID Original</th>
+                            <th>Titre</th>
+                            <th>Date</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody id="modifsBody"><tr><td colspan="5" class="empty-state">Aucune modification</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Confirm Modal -->
@@ -593,7 +622,8 @@
         let _data = {
             pubs: [],
             subs: [],
-            sponsors: []
+            sponsors: [],
+            modifs: []
         };
         let _pendingAction = null;
         let _pendingIds = null;
@@ -601,6 +631,7 @@
         async function loadData() {
             await loadPublications();
             await loadSponsors();
+            await loadModifications();
         }
 
         async function loadPublications() {
@@ -625,6 +656,16 @@
             } catch(e) { _data.sponsors = []; }
         }
 
+        async function loadModifications() {
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/modifications', { headers: getAuthHeaders() });
+                const json = await resp.json();
+                _data.modifs = json.modifications || [];
+            } catch(e) { _data.modifs = []; }
+            var tabBtn = document.getElementById('tabBtnModifs');
+            if (tabBtn) tabBtn.style.display = _data.modifs.length ? '' : 'none';
+        }
+
         // Convertisseur de description JSON (soumissions)
         function parseDesc(p) {
             if (!p) return {};
@@ -645,6 +686,7 @@
             if (tab === 'tabPubs') renderPubs();
             else if (tab === 'tabSoumissions') renderSubs();
             else if (tab === 'tabSponsor') renderSponsors();
+            else if (tab === 'tabModifs') renderModifs();
         }
 
         // ---- Publications (normales) ----
@@ -799,6 +841,94 @@
                 renderSubs();
                 alert('✅ ' + (json.certified || []).length + ' soumission(s) certifiée(s) sur ' + ids.length + '.');
             } catch(e) { alert('❌ Erreur lors de la certification.'); }
+        }
+
+        // ---- Modifications ----
+        function renderModifs() {
+            var q = (document.getElementById('searchModifs').value || '').toLowerCase().trim();
+            var list = _data.modifs;
+            if (q) list = list.filter(function(m) {
+                var txt = (m.titre || '') + ' ' + (m.activity_name || '') + ' ' + (m.modification_of || '') + ' ' + (m.auteur_email || '');
+                return txt.toLowerCase().indexOf(q) !== -1;
+            });
+            document.getElementById('modifsCounter').textContent = list.length + ' modification(s)';
+            var tbody = document.getElementById('modifsBody');
+            if (!list.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucune modification</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(function(m) {
+                var valBtn = '<button class="btn-action btn-xs btn-publish" onclick="validateModif(\'' + m.id + '\')" title="Valider la modification">✅</button>';
+                var rejBtn = '<button class="btn-action btn-xs btn-reject" onclick="rejectModif(\'' + m.id + '\')" title="Rejeter">❌</button>';
+                var extBtn = '<button class="btn-action btn-xs" onclick="extractModifJSON(\'' + m.id + '\')" title="Extraire en JSON">📥</button>';
+                return '<tr>'
+                    + '<td style="font-size:0.8rem;font-weight:600;">' + escHtml(m.modification_of || '—') + '</td>'
+                    + '<td style="max-width:180px;">' + escHtml(m.titre || m.activity_name || 'Sans titre') + '</td>'
+                    + '<td>' + (m.date || m.created_at || '—') + '</td>'
+                    + '<td style="font-size:0.8rem;">' + escHtml(m.auteur_email || '—') + '</td>'
+                    + '<td style="white-space:nowrap;">' + valBtn + ' ' + rejBtn + ' ' + extBtn + '</td>'
+                    + '</tr>';
+            }).join('');
+        }
+
+        async function validateModif(id) {
+            if (!confirm('✅ Appliquer cette modification à la publication originale ?')) return;
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/modifications', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ action: 'validate', id: id })
+                });
+                const json = await resp.json();
+                if (resp.ok) {
+                    await loadData();
+                    renderModifs();
+                    toast('✅ Modification validee et appliquee');
+                } else {
+                    toast('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { toast('❌ Erreur réseau'); }
+        }
+
+        async function rejectModif(id) {
+            if (!confirm('❌ Rejeter cette demande de modification ?')) return;
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/modifications', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ action: 'reject', id: id })
+                });
+                const json = await resp.json();
+                if (resp.ok) {
+                    await loadData();
+                    renderModifs();
+                    toast('❌ Modification rejetee');
+                } else {
+                    toast('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { toast('❌ Erreur réseau'); }
+        }
+
+        async function extractModifJSON(id) {
+            try {
+                const resp = await fetch(API_BASE + '/api/admin/modifications', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ action: 'extract', id: id })
+                });
+                const json = await resp.json();
+                if (resp.ok && json.data) {
+                    var blob = new Blob([JSON.stringify(json.data, null, 2)], { type: 'application/json' });
+                    var a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'modification_' + id + '_' + new Date().toISOString().split('T')[0] + '.json';
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                    toast('📥 JSON extrait');
+                } else {
+                    toast('❌ ' + (json.error || 'Erreur'));
+                }
+            } catch(e) { toast('❌ Erreur réseau'); }
         }
 
         // ---- Sponsors ----
@@ -974,9 +1104,9 @@
 
         // ---- Export JSON ----
         function exportJSON(type) {
-            var cls = type === 'pubs' ? 'ck-pubs' : 'ck-subs';
+            var cls = type === 'pubs' ? 'ck-pubs' : type === 'subs' ? 'ck-subs' : 'ck-modifs';
             var checked = getCheckedIds(cls);
-            var data = type === 'pubs' ? _data.pubs : _data.subs;
+            var data = type === 'pubs' ? _data.pubs : type === 'subs' ? _data.subs : _data.modifs;
             var exportData = checked.length ? data.filter(function(d) { return checked.indexOf(String(d.id)) !== -1; }) : data;
             if (!exportData.length) { alert('Aucune donnée à exporter.'); return; }
             var blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });

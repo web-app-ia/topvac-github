@@ -1479,6 +1479,40 @@
         @media (max-width: 700px) {
             .certif-switch-banner { top: 103px; }
         }
+        .shopping-market-header {
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
+            color: #fff;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(13,71,161,0.4);
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .shopping-market-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .shopping-market-publish-btn {
+            background: #43a047;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 22px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .shopping-market-publish-btn:hover { background: #2e7d32; transform: scale(1.03); }
         .shopping-publish-banner {
             background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
             border: 2px solid #43a047;
@@ -1486,8 +1520,6 @@
             padding: 18px 20px;
             margin-bottom: 16px;
             text-align: center;
-            position: relative;
-            z-index: 101;
         }
         .shopping-publish-text {
             font-size: 0.85rem;
@@ -3331,6 +3363,12 @@
             text-align: center;
             line-height: 1.5;
         }
+        .req-star { color:#d32f2f;margin-left:2px; }
+        .field-error { border-color:#d32f2f !important; background:#fff5f5 !important; }
+        .field-error-select { border-color:#d32f2f !important; }
+        .pub-form-error-list { list-style:none;padding:0;margin:6px 0 0;font-weight:400;text-align:left;font-size:0.78rem; }
+        .pub-form-error-list li { padding:2px 0; }
+        .pub-form-error-list li::before { content:"• ";color:#d32f2f; }
         .pub-success-msg {
             background: #e8f5e9;
             border: 1px solid #a5d6a7;
@@ -4465,12 +4503,15 @@
         /* ---- Détail Annonce Modal (plein écran) ---- */
         .detail-ad-modal {
             position: fixed;
-            inset: 0;
-            z-index: 3000;
+            top: 126px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9000;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
             display: none;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             padding: 10px;
         }
@@ -4480,7 +4521,7 @@
             border-radius: 20px;
             width: 100%;
             max-width: 780px;
-            max-height: 95vh;
+            max-height: 100%;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -4678,6 +4719,7 @@
         }
 
         @media (max-width: 700px) {
+            .detail-ad-modal { top: 98px; padding: 6px; }
             .detail-ad-card { border-radius: 12px; max-width: 100%; }
             .detail-ad-body { padding: 16px; }
             .detail-ad-body h2 { font-size: 1.05rem; }
@@ -4690,6 +4732,36 @@
 </head>
 <body>
 
+<script>
+    function showLoading(msg) {
+        var el = document.getElementById('loadingOverlay') || (function(){
+            var d = document.createElement('div');
+            d.id = 'loadingOverlay';
+            d.innerHTML = '<div style="position:fixed;inset:0;z-index:99999;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;"><div style="width:48px;height:48px;border:5px solid #e8f5e9;border-top-color:#43a047;border-radius:50%;animation:spinSearch 0.7s linear infinite;"></div><span id="loadingText" style="color:#2e7d32;font-weight:600;font-size:1rem;">Chargement...</span></div>';
+            document.body.appendChild(d);
+            return d;
+        })();
+        var t = document.getElementById('loadingText');
+        if (t) t.textContent = msg || 'Chargement...';
+        el.style.display = '';
+    }
+    function hideLoading() {
+        var el = document.getElementById('loadingOverlay');
+        if (el) el.style.display = 'none';
+    }
+    function fetchWithFallback(url, options, fallbackKey) {
+        showLoading('Chargement...');
+        return fetch(url, options)
+            .then(function(r) { hideLoading(); return r; })
+            .catch(function(err) {
+                hideLoading();
+                toast('⚠️ Erreur réseau — données locales affichées');
+                var cached = [];
+                try { cached = JSON.parse(localStorage.getItem(fallbackKey) || '[]'); } catch(e) {}
+                return { ok:false, json:function(){return Promise.resolve({success:false,ads:cached});} };
+            });
+    }
+
     <div class="gallery-mode-bar">
         <button class="gallery-mode-btn active" id="galleryModeActivities" onclick="switchGalleryMode('activities')">Espace : Activités</button>
         <button class="gallery-mode-btn" id="galleryModeShopping" onclick="switchGalleryMode('shopping')">Espace : Shopping</button>
@@ -4698,7 +4770,7 @@
         <button class="app-icon-btn" id="appIconBtn" onclick="toggleAppMenu()" title="Menu">
             <img src="images/logo.png" alt="TOP VACANCES.BF">
         </button>
-        <input type="search" id="filterSearchBar" class="filter-bar-input" placeholder="🔍 Rechercher par mots clés" oninput="debouncedApply()" >
+        <input type="search" id="filterSearchBar" class="filter-bar-input" placeholder="🔍 Rechercher par mots clés" oninput="debouncedApply()" onchange="debouncedApply()" onkeyup="debouncedApply()" >
         <button type="button" id="filterCategoryBar" class="filter-bar-select" onclick="toggleFilterPanel()">Filtre</button>
         <button class="cart-inline" id="cartFab" onclick="openCartModal()" title="Mon panier">
             🛒
@@ -5405,6 +5477,7 @@
         function closePublierPanel() {} // no-op (old panel removed)
         var _revendiquePubId = null;
         var _revendiqueTitre = null;
+        var _editingPubId = null;
         function openModalPublier(pubData) {
             _revendiquePubId = pubData ? pubData.id : null;
             _revendiqueTitre = pubData ? pubData.titre : null;
@@ -5452,13 +5525,13 @@
 
                 // ---- PAGE 3 : Infos principales + Affiche ----
                 + '<div class="pub-page" id="pubPage3" style="display:none">'
-                + '<div class="pub-field"><label id="pubLabelPromoteur">🏢 Nom de la structure promotrice ou du promoteur</label><input type="text" id="pubPromoteur" placeholder="Ex: Association Vacances Plus"></div>'
-                + '<div class="pub-field"><label id="pubLabelNomActivite">📛 Nom de l\'activité</label><input type="text" id="pubNomActivite" placeholder="Ex: Colonies Vacances 2026"></div>'
-                + '<div class="pub-field"><label id="pubLabelTextePublication">📝 Texte de publication</label><textarea id="pubTextePublication" rows="4" placeholder="Décrivez votre activité ou article en quelques phrases..." style="width:100%;padding:10px;border:2px solid rgba(76,175,80,0.3);border-radius:10px;font-size:0.9rem;background:rgba(255,255,255,0.9);color:#333;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea></div>'
-                + '<div class="pub-field"><label>📱 Votre numéro WhatsApp (pour être contacté)</label><div class="phone-input-wrap"><span class="phone-prefix">+226</span><input type="tel" id="pubWhatsappModal" placeholder="XX XX XX XX"></div></div>'
-                + '<div style="margin:14px 0 6px;font-weight:600;color:#2e7d32;font-size:0.9rem;">🖼️ Affiche</div>'
+                + '<div class="pub-field"><label id="pubLabelPromoteur">🏢 Nom de la structure promotrice ou du promoteur<span class="req-star">*</span></label><input type="text" id="pubPromoteur" placeholder="Ex: Association Vacances Plus" required></div>'
+                + '<div class="pub-field"><label id="pubLabelNomActivite">📛 Nom de l\'activité<span class="req-star">*</span></label><input type="text" id="pubNomActivite" placeholder="Ex: Colonies Vacances 2026" required></div>'
+                + '<div class="pub-field"><label id="pubLabelTextePublication">📝 Texte de publication<span class="req-star">*</span></label><textarea id="pubTextePublication" rows="4" placeholder="Décrivez votre activité ou article en quelques phrases..." style="width:100%;padding:10px;border:2px solid rgba(76,175,80,0.3);border-radius:10px;font-size:0.9rem;background:rgba(255,255,255,0.9);color:#333;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;" required></textarea></div>'
+                + '<div class="pub-field"><label>📱 Votre numéro WhatsApp (pour être contacté)<span class="req-star">*</span></label><div class="phone-input-wrap"><span class="phone-prefix">+226</span><input type="tel" id="pubWhatsappModal" placeholder="XX XX XX XX" required></div></div>'
+                + '<div style="margin:14px 0 6px;font-weight:600;color:#2e7d32;font-size:0.9rem;">🖼️ Affiche<span class="req-star">*</span></div>'
                 + '<div class="pub-gallery-section">'
-                + '<div class="pub-gallery-hint"><span id="pubLabelAffiche">📷 Importer l\'affiche de l\'activité</span><br><em style="font-size:0.75rem;color:#999;">NB : pas de vidéo</em></div>'
+                + '<div class="pub-gallery-hint"><span id="pubLabelAffiche">📷 Importer l\'affiche de l\'activité<span class="req-star">*</span></span><br><em style="font-size:0.75rem;color:#999;">NB : pas de vidéo</em></div>'
                 + '<div class="pub-gallery-imgs-preview" id="pubGalleryImgsPreview"></div>'
                 + '<label class="pub-gallery-btn"><input type="file" accept="image/*" onchange="handlePubAffiche(this.files)">📁 Importer une image</label>'
                 + '</div>'
@@ -5468,52 +5541,52 @@
                 // ---- PAGE 4 : Catégorie ----
                 + '<div class="pub-page" id="pubPage4" style="display:none">'
                 + '<p class="pub-slide-guide">Sélectionnez la catégorie qui correspond le mieux à votre activité.<br><em>Exemple :</em> "Ateliers artistiques" pour du brico-créa, "Colonies" pour des voyages de vacances.</p>'
-                + '<div class="pub-filter-group filter-full"><label>🏷️ Catégorie d\'activité</label><select id="pubCategorie" multiple size="6"><option value="ateliers">Ateliers artistiques-brico-créa</option><option value="colonies">Colonies/ &amp; voyages de vacances</option><option value="bibliotheques">Bibliothèques</option><option value="parcs">Parcs de loisirs / Espaces de loisirs</option><option value="formations">Stages &amp; Formations pour enfants</option><option value="competitions">Compétitions de vacances diverses</option><option value="appuis">Appuis scolaires</option><option value="evenements">Événements / Foires / Festivals</option><option value="domicile">Activités/formateurs à domiciles : loisirs ou scolaire</option><option value="parascolaire">Parascolaire regulier (les mercredi, samedi, dimanche)</option></select></div>'
+                + '<div class="pub-filter-group filter-full"><label>🏷️ Catégorie d\'activité<span class="req-star">*</span></label><select id="pubCategorie" multiple size="6" required><option value="">-- Sélectionnez au moins une option --</option><option value="ateliers">Ateliers artistiques-brico-créa</option><option value="colonies">Colonies/ &amp; voyages de vacances</option><option value="bibliotheques">Bibliothèques</option><option value="parcs">Parcs de loisirs / Espaces de loisirs</option><option value="formations">Stages &amp; Formations pour enfants</option><option value="competitions">Compétitions de vacances diverses</option><option value="appuis">Appuis scolaires</option><option value="evenements">Événements / Foires / Festivals</option><option value="domicile">Activités/formateurs à domiciles : loisirs ou scolaire</option><option value="parascolaire">Parascolaire regulier (les mercredi, samedi, dimanche)</option></select></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 2 : 3)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(6)">Suivant ▶</button></div>'
                 + '</div>'
 
                 // ---- PAGE 5 : Budget ----
                 + '<div class="pub-page" id="pubPage5" style="display:none">'
                 + '<p class="pub-slide-guide">Indiquez la fourchette de budget que votre activité nécessite.<br><em>Exemple :</em> min 5 000, max 50 000 FCFA pour une activité à coût modéré. Répétez la somme si le prix est unique, Ex : min 50 000, max 50 000 FCFA.</p>'
-                + '<div class="pub-filter-group"><label>💰 Budget (FCFA)</label><div class="range-row"><input type="number" id="pubBudgetMin" placeholder="Min"><span>—</span><input type="number" id="pubBudgetMax" placeholder="Max"></div></div>'
+                + '<div class="pub-filter-group"><label>💰 Budget (FCFA)<span class="req-star">*</span></label><div class="range-row"><input type="number" id="pubBudgetMin" placeholder="Min" required><span>—</span><input type="number" id="pubBudgetMax" placeholder="Max" required></div></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 2 : 3)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(6)">Suivant ▶</button></div>'
                 + '</div>'
 
                 // ---- PAGE 6 : Âge + Niveau scolaire ----
                 + '<div class="pub-page" id="pubPage6" style="display:none">'
                 + '<p class="pub-slide-guide">Précisez la tranche d\'âge des participants.<br><em>Exemple :</em> min 6, max 12 pour une activité destinée aux enfants.</p>'
-                + '<div class="pub-filter-group"><label>🎂 Âge</label><div class="range-row"><input type="number" id="pubAgeMin" placeholder="Min" min="0" max="120"><span>—</span><input type="number" id="pubAgeMax" placeholder="Max" min="0" max="120"></div></div>'
+                + '<div class="pub-filter-group"><label>🎂 Âge<span class="req-star">*</span></label><div class="range-row"><input type="number" id="pubAgeMin" placeholder="Min" min="0" max="120" required><span>—</span><input type="number" id="pubAgeMax" placeholder="Max" min="0" max="120" required></div></div>'
                 + '<p class="pub-slide-guide" style="margin-top:14px;">Choisissez le niveau scolaire adapté.<br><em>Exemple :</em> "Primaire" pour les élèves de 6 à 11 ans, "Lycée" pour les adolescents.</p>'
-                + '<div class="pub-filter-group"><label>📚 Niveau scolaire <span style="font-weight:400;font-size:0.7rem;color:#888;">(Multi-sélection)</span></label><select id="pubNiveau" multiple size="5"><option value="maternelle">Maternelle</option><option value="primaire">Primaire</option><option value="college">Collège</option><option value="lycee">Lycée</option></select></div>'
+                + '<div class="pub-filter-group"><label>📚 Niveau scolaire <span style="font-weight:400;font-size:0.7rem;color:#888;">(Multi-sélection)</span><span class="req-star">*</span></label><select id="pubNiveau" multiple size="5" required><option value="maternelle">Maternelle</option><option value="primaire">Primaire</option><option value="college">Collège</option><option value="lycee">Lycée</option></select></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 4 : 5)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(7)">Suivant ▶</button></div>'
                 + '</div>'
 
                 // ---- PAGE 7 : Localisation ----
                 + '<div class="pub-page" id="pubPage7" style="display:none">'
                 + '<p class="pub-slide-guide">Indiquez la localisation de votre activité.<br><em>Exemple :</em> Ouagadougou, secteur 4, quartier Dassasgho. Choisissez "En ligne" si l\'activité se déroule à distance.</p>'
-                + '<div class="pub-filter-group filter-full"><label>📍 Localisation</label><div class="cascade-row"><select id="pubLocVille" multiple size="5"><option>Ouagadougou</option><option>Bobo</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Dédougou</option><option>Tenkodogo</option><option>Kaya</option><option>Fada</option><option>Dori</option><option>Gaoua</option><option>Manga</option><option>En ligne</option></select><input type="text" id="pubLocArrond" placeholder="Arrond."><input type="text" id="pubLocSecteur" placeholder="Secteur"><input type="text" id="pubLocQuartier" placeholder="Quartier"></div></div>'
+                + '<div class="pub-filter-group filter-full"><label>📍 Localisation<span class="req-star">*</span></label><div class="cascade-row"><select id="pubLocVille" multiple size="5" required><option>Ouagadougou</option><option>Bobo</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Dédougou</option><option>Tenkodogo</option><option>Kaya</option><option>Fada</option><option>Dori</option><option>Gaoua</option><option>Manga</option><option>En ligne</option></select><input type="text" id="pubLocArrond" placeholder="Arrond." required><input type="text" id="pubLocSecteur" placeholder="Secteur" required><input type="text" id="pubLocQuartier" placeholder="Quartier" required></div></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 4 : 5)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 9 : 8)">Suivant ▶</button></div>'
                 + '</div>'
 
                 // ---- PAGE 8 : Horaires + Jours ----
                 + '<div class="pub-page" id="pubPage8" style="display:none">'
                 + '<p class="pub-slide-guide">Sélectionnez les créneaux horaires disponibles.<br><em>Exemple :</em> si votre activité a lieu en journée, choisissez "Matin" et/ou "Après-midi".</p>'
-                + '<div class="pub-filter-group"><label>🕐 Horaires</label><select id="pubHoraire" multiple size="5"><option value="matin">Matin</option><option value="apres-midi">Après-midi</option><option value="soir">Soir</option><option value="nuit">Nuit</option><option value="weekend">Week-end</option></select></div>'
+                + '<div class="pub-filter-group"><label>🕐 Horaires<span class="req-star">*</span></label><select id="pubHoraire" multiple size="5" required><option value="matin">Matin</option><option value="apres-midi">Après-midi</option><option value="soir">Soir</option><option value="nuit">Nuit</option><option value="weekend">Week-end</option></select></div>'
                 + '<p class="pub-slide-guide" style="margin-top:14px;">Sélectionnez les jours qui vous intéressent</p>'
-                + '<div class="pub-filter-group"><label>📅 Jours</label><select id="pubJours" multiple size="5"><option value="lundi">Lundi</option><option value="mardi">Mardi</option><option value="mercredi">Mercredi</option><option value="jeudi">Jeudi</option><option value="vendredi">Vendredi</option><option value="samedi">Samedi</option><option value="dimanche">Dimanche</option></select></div>'
+                + '<div class="pub-filter-group"><label>📅 Jours<span class="req-star">*</span></label><select id="pubJours" multiple size="5" required><option value="lundi">Lundi</option><option value="mardi">Mardi</option><option value="mercredi">Mercredi</option><option value="jeudi">Jeudi</option><option value="vendredi">Vendredi</option><option value="samedi">Samedi</option><option value="dimanche">Dimanche</option></select></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(7)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(9)">Suivant ▶</button></div>'
                 + '</div>'
 
                 // ---- PAGE 9 : Période de validité ----
                 + '<div class="pub-page" id="pubPage9" style="display:none">'
                 + '<p class="pub-slide-guide">Définissez la période durant laquelle votre activité/service est disponible pour les consommateurs.<br><em>Exemple :</em> du 1ᵉʳ janvier au 31 décembre 2026.</p>'
-                + '<div class="pub-filter-group filter-full"><label>📅 Période de validité</label><div style="display:flex;gap:10px;"><div style="flex:1;"><label class="pub-date-label">Début</label><input type="date" id="pubStartDate"></div><div style="flex:1;"><label class="pub-date-label">Fin</label><input type="date" id="pubEndDate"></div></div></div>'
+                + '<div class="pub-filter-group filter-full"><label>📅 Période de validité<span class="req-star">*</span></label><div style="display:flex;gap:10px;"><div style="flex:1;"><label class="pub-date-label">Début<span class="req-star">*</span></label><input type="date" id="pubStartDate" required></div><div style="flex:1;"><label class="pub-date-label">Fin<span class="req-star">*</span></label><input type="date" id="pubEndDate" required></div></div></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 6 : 7)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(10)">Suivant ▶</button></div>'
                 + '</div>'
 
                 // ---- PAGE 10 : Accès ----
                 + '<div class="pub-page" id="pubPage10" style="display:none">'
-                + '<div class="pub-filter-group"><label>Accessible aux</label><div id="pubAccessGroup" class="access-list"><label class="access-list-item"><input type="checkbox" value="autisme"> Autisme</label><label class="access-list-item"><input type="checkbox" value="mobilite_reduite_pied"> Mobilité réduite (Pied)</label><label class="access-list-item"><input type="checkbox" value="mobilite_reduite_main"> Mobilité réduite (Main)</label><label class="access-list-item"><input type="checkbox" value="surdite"> Surdité</label><label class="access-list-item"><input type="checkbox" value="mutisme"> Mutisme</label><label class="access-list-item"><input type="checkbox" value="deficience_visuelle"> Déficience visuelle</label></div></div>'
+                + '<div class="pub-filter-group"><label>Accessible aux<span class="req-star">*</span></label><div id="pubAccessGroup" class="access-list"><label class="access-list-item"><input type="checkbox" value="autisme"> Autisme</label><label class="access-list-item"><input type="checkbox" value="mobilite_reduite_pied"> Mobilité réduite (Pied)</label><label class="access-list-item"><input type="checkbox" value="mobilite_reduite_main"> Mobilité réduite (Main)</label><label class="access-list-item"><input type="checkbox" value="surdite"> Surdité</label><label class="access-list-item"><input type="checkbox" value="mutisme"> Mutisme</label><label class="access-list-item"><input type="checkbox" value="deficience_visuelle"> Déficience visuelle</label></div></div>'
                 + '<div class="pub-page-nav"><button class="pub-nav-btn" onclick="goToPubPage(pubType === \'shopping\' ? 6 : 8)">◀ Précédent</button><button class="pub-nav-btn" onclick="goToPubPage(11)">Suivant ▶</button></div>'
                 + '</div>'
 
@@ -6070,6 +6143,7 @@
                     return;
                 }
                 container.innerHTML = pubs.map(function(p) {
+                    if (p.type === 'modification') return '';
                     var pDesc = (function(t) { try { return JSON.parse(t); } catch(e) { return {}; } })(p.description);
                     var pMeta = pDesc.meta || {};
                     if (pMeta.delete_requested) return '';
@@ -6094,6 +6168,7 @@
                     var pSponsPos = pMeta.sponsored_position || 1;
                     var pMontant = pMeta.montant || (p.type === 'shopping' ? 10000 : 3000);
                     var payBtnHtml = showPaymentBtn ? '<div style="margin-top:8px;"><button class="pub-nav-btn" style="background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;" onclick="openPaymentModal(\'' + p.id + '\',' + pMontant + ',\'' + pFormule + '\',' + pNbLots + ',' + pSponsPos + ')">💳 Procéder au paiement</button></div>' : '';
+                    var editBtnHtml = (p.certifie && p.payment_status === 'validated') ? '<div style="margin-top:8px;"><button class="pub-nav-btn" style="background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;" onclick="openEditPublicationModal(\'' + p.id + '\')">✏️ Modifier</button></div>' : '';
                     return '<div style="padding:12px 16px;background:#f1f8e9;border-radius:12px;border:1px solid #c8e6c9;margin-bottom:10px;font-size:0.9rem;">' +
                         '<div style="font-weight:600;color:#1b5e20;">' + statusIcon + '</div>' +
                         (p.activity_name ? '<div style="color:#333;margin-top:4px;font-weight:600;">🏷️ ' + escHtml(p.activity_name) + '</div>' : '') +
@@ -6101,6 +6176,7 @@
                         '<div style="color:#888;font-size:0.8rem;margin-top:4px;">📅 ' + (p.created_at || '') + '</div>' +
                         infoNote +
                         payBtnHtml +
+                        editBtnHtml +
                         '</div>';
                 }).join('');
             });
@@ -6120,6 +6196,74 @@
                 headers: getAuthHeaders(),
                 body: JSON.stringify(pub)
             }).then(function(r) { return r.json(); });
+        }
+        function saveUserModification(pub) {
+            return fetch('/api/publications/modify', {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(pub)
+            }).then(function(r) { return r.json(); });
+        }
+        function openEditPublicationModal(pubId) {
+            fetch('/api/pubs/' + encodeURIComponent(pubId), { headers: getAuthHeaders() })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (!data.success || !data.ad) {
+                        toast('❌ Publication introuvable');
+                        return;
+                    }
+                    var p = data.ad;
+                    _editingPubId = pubId;
+                    openModalPublier();
+                    var pDesc = {};
+                    try { pDesc = JSON.parse(p.description || '{}'); } catch(e) {}
+                    var pMeta = pDesc.meta || {};
+                    var isShop = p.type === 'shopping';
+                    // Set type radio and navigate
+                    document.querySelector('input[name="pubType"][value="' + (isShop ? 'shopping' : 'activities') + '"]').checked = true;
+                    selectPubType(isShop ? 'shopping' : 'activities');
+                    // Pre-fill fields
+                    if (document.getElementById('pubPromoteur')) document.getElementById('pubPromoteur').value = p.promoteur || '';
+                    if (document.getElementById('pubNomActivite')) document.getElementById('pubNomActivite').value = p.activity_name || '';
+                    if (document.getElementById('pubTextePublication')) document.getElementById('pubTextePublication').value = p.texte_publication || '';
+                    if (document.getElementById('pubWhatsappModal')) document.getElementById('pubWhatsappModal').value = p.whatsapp || '';
+                    if (document.getElementById('pubBudgetMin')) document.getElementById('pubBudgetMin').value = pMeta.budget_min || '';
+                    if (document.getElementById('pubBudgetMax')) document.getElementById('pubBudgetMax').value = pMeta.budget_max || '';
+                    if (document.getElementById('pubAgeMin')) document.getElementById('pubAgeMin').value = pMeta.age_min || '';
+                    if (document.getElementById('pubAgeMax')) document.getElementById('pubAgeMax').value = pMeta.age_max || '';
+                    if (document.getElementById('pubLocArrond')) document.getElementById('pubLocArrond').value = pMeta.arrond || '';
+                    if (document.getElementById('pubLocSecteur')) document.getElementById('pubLocSecteur').value = pMeta.secteur || '';
+                    if (document.getElementById('pubLocQuartier')) document.getElementById('pubLocQuartier').value = pMeta.quartier || '';
+                    if (document.getElementById('pubStartDate')) document.getElementById('pubStartDate').value = pMeta.start_date || '';
+                    if (document.getElementById('pubEndDate')) document.getElementById('pubEndDate').value = pMeta.end_date || '';
+                    // Multi-select fields
+                    function setMultiSelect(id, vals) {
+                        var el = document.getElementById(id);
+                        if (!el || !vals) return;
+                        var arr = Array.isArray(vals) ? vals : [vals];
+                        for (var i = 0; i < el.options.length; i++) {
+                            el.options[i].selected = arr.indexOf(el.options[i].value) !== -1;
+                        }
+                    }
+                    setMultiSelect('pubCategorie', pMeta.categorie);
+                    setMultiSelect('pubNiveau', pMeta.niveau_scolaire);
+                    setMultiSelect('pubLocVille', pMeta.ville);
+                    setMultiSelect('pubHoraire', pMeta.horaires);
+                    setMultiSelect('pubJours', pMeta.jours);
+                    // Checkboxes (access)
+                    var accessVals = Array.isArray(pMeta.access) ? pMeta.access : [];
+                    document.querySelectorAll('input[name="pubAccess"][type="checkbox"]').forEach(function(cb) {
+                        cb.checked = accessVals.indexOf(cb.value) !== -1;
+                    });
+                    // Payment formula
+                    var formule = pMeta.formule || 'normal';
+                    var formuleRadio = document.querySelector('input[name="pubPayChoice"][value="' + formule + '"]');
+                    if (formuleRadio) formuleRadio.checked = true;
+                    if (document.getElementById('pubNbLots')) document.getElementById('pubNbLots').value = pMeta.nb_lots || 1;
+                    if (document.getElementById('pubSponsoredPosition')) document.getElementById('pubSponsoredPosition').value = pMeta.sponsored_position || 1;
+                    togglePayFormule();
+                })
+                .catch(function() { toast('❌ Erreur réseau'); });
         }
         function openPaymentModal(pubId, amount, formule, nbLots, sponsoredPosition) {
             if (!nbLots) nbLots = 1;
@@ -6241,30 +6385,128 @@
             var payBtn = document.getElementById('pubPayBtn2');
             if (payBtn) payBtn.style.display = 'none';
         }
+        function clearPubErrors() {
+            document.querySelectorAll('.field-error, .field-error-select').forEach(function(el) {
+                el.classList.remove('field-error', 'field-error-select');
+            });
+            var errorEl = document.getElementById('pubFormError');
+            errorEl.style.display = 'none';
+            // Restore error element to page 11 if it was moved
+            var page11 = document.getElementById('pubPage11');
+            if (page11 && !page11.contains(errorEl)) {
+                var nav = page11.querySelector('.pub-page-nav');
+                if (nav) {
+                    page11.insertBefore(errorEl, nav);
+                } else {
+                    page11.appendChild(errorEl);
+                }
+            }
+        }
+        function setPubErrors(errorList) {
+            var fieldToPage = {
+                pubPromoteur:3, pubNomActivite:3, pubTextePublication:3, pubWhatsappModal:3, pubLabelAffiche:3,
+                pubCategorie:4,
+                pubBudgetMin:5, pubBudgetMax:5,
+                pubAgeMin:6, pubAgeMax:6, pubNiveau:6,
+                pubLocVille:7, pubLocArrond:7, pubLocSecteur:7, pubLocQuartier:7,
+                pubHoraire:8, pubJours:8,
+                pubStartDate:9, pubEndDate:9,
+                pubAccessGroup:10
+            };
+            var errorHtml = '<ul class="pub-form-error-list">';
+            errorList.forEach(function(item) {
+                errorHtml += '<li>' + item.label + '</li>';
+                var el = document.getElementById(item.id);
+                if (el) {
+                    if (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') {
+                        el.classList.add('field-error-select');
+                    } else {
+                        el.classList.add('field-error');
+                    }
+                }
+            });
+            errorHtml += '</ul>';
+            var errorEl = document.getElementById('pubFormError');
+            errorEl.innerHTML = '\u26A0\uFE0F Veuillez remplir tous les champs obligatoires' + errorHtml;
+            errorEl.style.display = 'block';
+            if (errorList.length > 0) {
+                var firstPage = fieldToPage[errorList[0].id] || 3;
+                pubCurrentPage = firstPage;
+                for (var i = 1; i <= 11; i++) {
+                    var el = document.getElementById('pubPage' + i);
+                    if (el) el.style.display = i === firstPage ? 'block' : 'none';
+                }
+                updatePubProgress(firstPage);
+                // Move error message into current page
+                var currentPage = document.getElementById('pubPage' + firstPage);
+                if (currentPage && !currentPage.contains(errorEl)) {
+                    var nav = currentPage.querySelector('.pub-page-nav');
+                    if (nav) {
+                        currentPage.insertBefore(errorEl, nav);
+                    } else {
+                        currentPage.appendChild(errorEl);
+                    }
+                }
+                var firstField = document.getElementById(errorList[0].id);
+                if (firstField) {
+                    setTimeout(function() { firstField.scrollIntoView({ behavior:'smooth', block:'center' }); }, 100);
+                }
+            }
+        }
         function submitPublicationModal() {
             try {
+            clearPubErrors();
             var promoteur = document.getElementById('pubPromoteur').value.trim();
             var activityName = document.getElementById('pubNomActivite').value.trim();
             var textePublication = document.getElementById('pubTextePublication').value.trim();
             var whatsapp = document.getElementById('pubWhatsappModal').value.trim();
-            document.getElementById('pubFormError').style.display = 'none';
-            // Validation temporairement désactivée pour test
+            var errors = [];
+            if (!promoteur) errors.push({ label:'🏢 Promoteur', id:'pubPromoteur' });
+            if (!activityName) errors.push({ label:'📛 Nom de l\'activité', id:'pubNomActivite' });
+            if (!textePublication) errors.push({ label:'📝 Texte de publication', id:'pubTextePublication' });
+            if (!whatsapp) errors.push({ label:'📱 WhatsApp', id:'pubWhatsappModal' });
             // Collect filter fields
-            var categorie = getMultiSelectValues('pubCategorie');
+            var isShop = pubType === 'shopping';
+            if (!isShop) {
+                var categorie = getMultiSelectValues('pubCategorie');
+                if (categorie.length === 0) errors.push({ label:'🏷️ Catégorie', id:'pubCategorie' });
+            }
             var budgetMin = (document.getElementById('pubBudgetMin') || {}).value || '';
             var budgetMax = (document.getElementById('pubBudgetMax') || {}).value || '';
+            if (!budgetMin) errors.push({ label:'💰 Budget min', id:'pubBudgetMin' });
+            if (!budgetMax) errors.push({ label:'💰 Budget max', id:'pubBudgetMax' });
             var ageMin = (document.getElementById('pubAgeMin') || {}).value || '';
             var ageMax = (document.getElementById('pubAgeMax') || {}).value || '';
-            var niveau = getMultiSelectValues('pubNiveau');
+            if (!ageMin) errors.push({ label:'🎂 Âge min', id:'pubAgeMin' });
+            if (!ageMax) errors.push({ label:'🎂 Âge max', id:'pubAgeMax' });
+            if (!isShop) {
+                var niveau = getMultiSelectValues('pubNiveau');
+                if (niveau.length === 0) errors.push({ label:'📚 Niveau scolaire', id:'pubNiveau' });
+            }
             var ville = getMultiSelectValues('pubLocVille');
+            if (ville.length === 0) errors.push({ label:'📍 Ville', id:'pubLocVille' });
             var arrond = (document.getElementById('pubLocArrond') || {}).value || '';
             var secteur = (document.getElementById('pubLocSecteur') || {}).value || '';
             var quartier = (document.getElementById('pubLocQuartier') || {}).value || '';
-            var horaires = getMultiSelectValues('pubHoraire');
-            var jours = getMultiSelectValues('pubJours');
+            if (!arrond) errors.push({ label:'📍 Arrondissement', id:'pubLocArrond' });
+            if (!secteur) errors.push({ label:'📍 Secteur', id:'pubLocSecteur' });
+            if (!quartier) errors.push({ label:'📍 Quartier', id:'pubLocQuartier' });
+            if (!isShop) {
+                var horaires = getMultiSelectValues('pubHoraire');
+                if (horaires.length === 0) errors.push({ label:'🕐 Horaires', id:'pubHoraire' });
+                var jours = getMultiSelectValues('pubJours');
+                if (jours.length === 0) errors.push({ label:'📅 Jours', id:'pubJours' });
+            }
             var startDate = (document.getElementById('pubStartDate') || {}).value || '';
             var endDate = (document.getElementById('pubEndDate') || {}).value || '';
-            var access = getCheckboxValues('pubAccessGroup');
+            if (!startDate) errors.push({ label:'📅 Date début', id:'pubStartDate' });
+            if (!endDate) errors.push({ label:'📅 Date fin', id:'pubEndDate' });
+            if (!isShop) {
+                var access = getCheckboxValues('pubAccessGroup');
+                if (access.length === 0) errors.push({ label:'♿ Accessibilité', id:'pubAccessGroup' });
+            }
+            if (!pubAfficheFile) errors.push({ label:'🖼️ Affiche', id:'pubLabelAffiche' });
+            if (errors.length > 0) { setPubErrors(errors); return; }
             var description = JSON.stringify({
                 categorie: categorie,
                 budget_min: budgetMin,
@@ -6292,7 +6534,6 @@
             var btn = document.querySelector('.pub-submit-btn, .pub-valider-btn');
             if (btn) { btn.textContent = '⏳ Envoi en cours...'; btn.disabled = true; }
             // Update success summary
-            var isShop = pubType === 'shopping';
             var priceText = isShop ? '10 000 FCFA' : '3 000 FCFA';
             var summaryEl = document.getElementById('pubSuccessFormuleText');
             if (summaryEl) {
@@ -6303,40 +6544,71 @@
                     summaryEl.innerHTML = '\uD83D\uDCC4 Place al\u00E9atoire \u00E0 chaque rechargement de page \u2014 ' + priceText + ' \u00D7 ' + nbLots + ' lot(s) = ' + totalAmount.toLocaleString() + ' FCFA';
                 }
             }
-            saveUserPublication({
-                promoteur: promoteur,
-                activity_name: activityName,
-                texte_publication: textePublication,
-                whatsapp: whatsapp,
-                categorie: categorie,
-                budget_min: budgetMin,
-                budget_max: budgetMax,
-                age_min: ageMin,
-                age_max: ageMax,
-                niveau_scolaire: niveau,
-                ville: ville,
-                arrond: arrond,
-                secteur: secteur,
-                quartier: quartier,
-                horaires: horaires,
-                jours: jours,
-                start_date: startDate,
-                end_date: endDate,
-                access: access,
-                type: pubType,
-                revendique_id: _revendiquePubId,
-                formule: formule,
-                nb_lots: nbLots,
-                sponsored_position: sponsoredPosition,
-                montant: totalAmount
-            }).then(function(data) {
+            var savePromise = _editingPubId
+                ? saveUserModification({
+                    original_id: _editingPubId,
+                    promoteur: promoteur,
+                    activity_name: activityName,
+                    texte_publication: textePublication,
+                    whatsapp: whatsapp,
+                    categorie: categorie,
+                    budget_min: budgetMin,
+                    budget_max: budgetMax,
+                    age_min: ageMin,
+                    age_max: ageMax,
+                    niveau_scolaire: niveau,
+                    ville: ville,
+                    arrond: arrond,
+                    secteur: secteur,
+                    quartier: quartier,
+                    horaires: horaires,
+                    jours: jours,
+                    start_date: startDate,
+                    end_date: endDate,
+                    access: access,
+                    type: pubType,
+                    formule: formule,
+                    nb_lots: nbLots,
+                    sponsored_position: sponsoredPosition,
+                    montant: totalAmount
+                })<parameter name="A" string="true">:</parameter>
+                : saveUserPublication({
+                    promoteur: promoteur,
+                    activity_name: activityName,
+                    texte_publication: textePublication,
+                    whatsapp: whatsapp,
+                    categorie: categorie,
+                    budget_min: budgetMin,
+                    budget_max: budgetMax,
+                    age_min: ageMin,
+                    age_max: ageMax,
+                    niveau_scolaire: niveau,
+                    ville: ville,
+                    arrond: arrond,
+                    secteur: secteur,
+                    quartier: quartier,
+                    horaires: horaires,
+                    jours: jours,
+                    start_date: startDate,
+                    end_date: endDate,
+                    access: access,
+                    type: pubType,
+                    revendique_id: _revendiquePubId,
+                    formule: formule,
+                    nb_lots: nbLots,
+                    sponsored_position: sponsoredPosition,
+                    montant: totalAmount
+                });
+            savePromise.then(function(data) {
                 if (data.success) {
-                    var pubId = data.publication ? data.publication.id : null;
+                    var pubId = data.publication ? data.publication.id : (data.modification ? data.modification.id : null);
                     document.getElementById('pubTabForm').style.display = 'none';
                     document.getElementById('pubTabMesPubs').style.display = 'none';
                     document.getElementById('pubTabBtnForm').classList.remove('active');
                     document.getElementById('pubTabBtnMesPubs').classList.remove('active');
-                    document.getElementById('pubSuccessMsg').innerHTML = 'Votre formulaire a été reçu et est actuellement en cours d\'analyse, veuillez consulter l\'onglet <strong>« Mes publications »</strong> pour vérifier si la publication a été validée. Après validation de votre publication, vous aurez un délais de <strong>48 h maximum</strong> pour procéder au paiement des frais de publication nécessaire pour la validation finale de votre publication.<br><br><strong>NB :</strong> Vous pouvez suivre le statut de toutes vos publications dans l\'onglet « Mes publications ».';
+                    document.getElementById('pubSuccessMsg').innerHTML = _editingPubId
+                        ? 'Votre demande de modification a été soumise pour examen par l\'équipe d\'administration. Vous recevrez une notification dès qu\'elle sera traitée.'
+                        : 'Votre formulaire a été reçu et est actuellement en cours d\'analyse, veuillez consulter l\'onglet <strong>« Mes publications »</strong> pour vérifier si la publication a été validée. Après validation de votre publication, vous aurez un délais de <strong>48 h maximum</strong> pour procéder au paiement des frais de publication nécessaire pour la validation finale de votre publication.<br><br><strong>NB :</strong> Vous pouvez suivre le statut de toutes vos publications dans l\'onglet « Mes publications ».';
                     document.getElementById('pubSuccessNote').textContent = '';
                     document.getElementById('pubPayBtn2').style.display = 'none';
                     document.getElementById('pubTabSuccess').style.display = 'flex';
@@ -6355,6 +6627,7 @@
                 toast('❌ Erreur réseau. Veuillez réessayer.');
             }).finally(function() {
                 if (btn) { btn.textContent = '📨 Soumettre le formulaire'; btn.disabled = false; }
+                _editingPubId = null;
             });
             } catch(e) { console.error('submitPublicationModal error:', e); toast('❌ Erreur: ' + e.message); }
         }
@@ -7302,7 +7575,8 @@
         function getCartKey() {
             var u = null;
             try { u = JSON.parse(localStorage.getItem('tv_user') || 'null') || JSON.parse(localStorage.getItem('tv_user_local') || 'null'); } catch(e) {}
-            return u && u.id ? 'tv_cart_' + u.id : null;
+            if (u && u.id) return 'tv_cart_' + u.id;
+            return 'tv_cart_anonymous';
         }
 
         function getCart() {
@@ -7746,6 +8020,9 @@
         // ---- Détail Annonce ----
         function openAdDetail(id) {
             var data = allAdsData.find(function(a) { return String(a.id) === String(id); });
+            if (!data && galleryMode === 'shopping') {
+                data = shoppingAdsData.find(function(a) { return String(a.id) === String(id); });
+            }
             if (!data) return;
             var modal = document.getElementById('detailAdModal');
             document.getElementById('detailAdImage').src = data.image || '';
@@ -7891,6 +8168,11 @@
         }
 
         function switchGalleryMode(mode) {
+            // Fermer toutes les modales ouvertes
+            ['detailAdModal','cartModal','loginModal','adminModal','aboutModal','adModal','sponsorModal','boiteDetailModal','interesseModal','mediaFullscreen'].forEach(function(id){
+                var el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
             galleryMode = mode;
             if (mode !== 'nouveautes') {
                 document.getElementById('galleryModeActivities').classList.toggle('active', mode === 'activities');
@@ -7918,9 +8200,12 @@
             var filterBtn = document.getElementById('filterCategoryBar');
             if (mode === 'shopping') {
                 if (filterBtn) filterBtn.style.display = '';
+                var sb = document.getElementById('filterSearchBar'); if (sb) sb.value = '';
+                var s1 = document.getElementById('filterSearch'); if (s1) s1.value = '';
+                var s2 = document.getElementById('filterSearchShop'); if (s2) s2.value = '';
                 var bs = document.getElementById('bannerSubtitle');
                 if (bs) bs.style.display = 'none';
-                var shopBanner = '<div class="nouveautes-header">📌 Market-place</div><div class="shopping-publish-banner"><p class="shopping-publish-text">Decouvrez ou publiez ici des articles de commerce : jouets, outils, accessoires, motos électriques, tablettes pour enfants, etc, utiles pour les vacances et les week-ends</p><button class="shopping-publish-btn" onclick="openModalPublier()">📢 Publier</button></div>';
+                var shopBanner = '<div class="shopping-market-header"><span class="shopping-market-title">📌 Market-place</span><button class="shopping-market-publish-btn" onclick="openModalPublier()">📢 Publier</button></div><div class="shopping-publish-banner"><p class="shopping-publish-text">Decouvrez ou publiez ici des articles de commerce : jouets, outils, accessoires, motos électriques, tablettes pour enfants, etc, utiles pour les vacances et les week-ends</p></div>';
                 if (shoppingAdsData.length) {
                     renderGallery(shoppingAdsData, shopBanner);
                 } else {
@@ -7935,7 +8220,7 @@
                 var mm = String(d.getMonth()+1).padStart(2,'0');
                 var yy = String(d.getFullYear()).slice(-2);
                 var container = document.getElementById('gallery-container');
-                container.innerHTML = '<div class="nouveautes-header">📌 Page des Nouveautés du ' + dd + '/' + mm + '/' + yy + '</div><div style="text-align:center;padding:60px 20px;color:#888;font-size:1rem;">🆕 Aucune nouveauté pour le moment</div>';
+                container.innerHTML = '<div class="nouveautes-header">📌 Page des Nouveautés du ' + dd + '/' + mm + '/' + yy + '</div><div style="text-align:center;padding:60px 20px;color:#888;font-size:1rem;">🆕 Aucune nouveauté aujourd\'hui. Consultez les anciennes publications sur la page « Revenir à tout »</div>';
                 var bs = document.getElementById('bannerSubtitle');
                 if (bs) bs.style.display = 'none';
             } else {
@@ -7971,7 +8256,8 @@
 
         function getFilterState() {
             var isShopping = galleryMode === 'shopping';
-            var searchBar = document.getElementById('filterSearchBar').value.toLowerCase().trim();
+            var sbEl = document.getElementById('filterSearchBar');
+            var searchBar = sbEl ? sbEl.value.toLowerCase().trim() : '';
 
             var state = {
                 search: searchBar,
@@ -7993,38 +8279,54 @@
                 endDate: ''
             };
 
+            try {
             if (isShopping) {
                 var sp = document.getElementById('filterSearchShop');
                 state.search = (searchBar + ' ' + (sp ? sp.value.toLowerCase().trim() : '')).trim();
                 var certifEl = document.getElementById('filterCertifShop');
                 if (certifEl) state.certif = certifEl.value;
                 state.cat = getMultiSelectValues('filterCategoryShop');
-                state.budgetMin = document.getElementById('filterBudgetMinShop').value;
-                state.budgetMax = document.getElementById('filterBudgetMaxShop').value;
+                var bmin = document.getElementById('filterBudgetMinShop');
+                if (bmin) state.budgetMin = bmin.value;
+                var bmax = document.getElementById('filterBudgetMaxShop');
+                if (bmax) state.budgetMax = bmax.value;
                 state.locVille = getMultiSelectValues('filterLocVilleShop');
-                state.locArrond = document.getElementById('filterLocArrondShop').value;
-                state.locSecteur = document.getElementById('filterLocSecteurShop').value;
-                state.locQuartier = document.getElementById('filterLocQuartierShop').value;
+                var la = document.getElementById('filterLocArrondShop');
+                if (la) state.locArrond = la.value;
+                var ls = document.getElementById('filterLocSecteurShop');
+                if (ls) state.locSecteur = ls.value;
+                var lq = document.getElementById('filterLocQuartierShop');
+                if (lq) state.locQuartier = lq.value;
             } else {
                 var sp = document.getElementById('filterSearch');
                 state.search = (searchBar + ' ' + (sp ? sp.value.toLowerCase().trim() : '')).trim();
                 var certifEl = document.getElementById('filterCertif');
                 if (certifEl) state.certif = certifEl.value;
                 state.cat = getMultiSelectValues('filterCategory');
-                state.budgetMin = document.getElementById('filterBudgetMin').value;
-                state.budgetMax = document.getElementById('filterBudgetMax').value;
-                state.ageMin = document.getElementById('filterAgeMin').value;
-                state.ageMax = document.getElementById('filterAgeMax').value;
+                var bmin = document.getElementById('filterBudgetMin');
+                if (bmin) state.budgetMin = bmin.value;
+                var bmax = document.getElementById('filterBudgetMax');
+                if (bmax) state.budgetMax = bmax.value;
+                var amin = document.getElementById('filterAgeMin');
+                if (amin) state.ageMin = amin.value;
+                var amax = document.getElementById('filterAgeMax');
+                if (amax) state.ageMax = amax.value;
                 state.niveau = getMultiSelectValues('filterNiveau');
                 state.access = getCheckboxValues('filterAccessGroup');
                 state.horaire = getCheckboxValues('filterHoraireGroup');
                 state.locVille = getMultiSelectValues('filterLocVille');
-                state.locArrond = document.getElementById('filterLocArrond').value;
-                state.locSecteur = document.getElementById('filterLocSecteur').value;
-                state.locQuartier = document.getElementById('filterLocQuartier').value;
-                state.startDate = document.getElementById('filterStartDate').value;
-                state.endDate = document.getElementById('filterEndDate').value;
+                var la = document.getElementById('filterLocArrond');
+                if (la) state.locArrond = la.value;
+                var ls = document.getElementById('filterLocSecteur');
+                if (ls) state.locSecteur = ls.value;
+                var lq = document.getElementById('filterLocQuartier');
+                if (lq) state.locQuartier = lq.value;
+                var sd = document.getElementById('filterStartDate');
+                if (sd) state.startDate = sd.value;
+                var ed = document.getElementById('filterEndDate');
+                if (ed) state.endDate = ed.value;
             }
+            } catch(e) { console.error('getFilterState error:', e); }
 
             return state;
         }
@@ -8309,9 +8611,11 @@
                 updateFilterBtnState();
             }
             // Load activities from API
+            showLoading('Chargement des activités...');
             fetch('/api/pubs?type=activities')
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
+                    hideLoading();
                     if (data.success && data.ads && data.ads.length) {
                         var existingIds = {};
                         for (var i = 0; i < allAdsData.length; i++) existingIds[allAdsData[i].id] = true;
@@ -8329,6 +8633,8 @@
                     updateFilterBtnState();
                 })
                 .catch(function() {
+                    hideLoading();
+                    toast('⚠️ Erreur réseau — activités locales affichées');
                     if (allAdsData && allAdsData.length) {
                         shuffleArray(allAdsData);
                         renderGallery(allAdsData);
@@ -8336,9 +8642,11 @@
                     }
                 });
             // Load shopping from API
+            showLoading('Chargement des articles...');
             fetch('/api/pubs?type=shopping')
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
+                    hideLoading();
                     if (data.success && data.ads && data.ads.length) {
                         var shopIds = {};
                         for (var i = 0; i < shoppingAdsData.length; i++) shopIds[shoppingAdsData[i].id] = true;
@@ -8357,6 +8665,8 @@
                     }
                 })
                 .catch(function() {
+                    hideLoading();
+                    toast('⚠️ Erreur réseau — articles locaux affichés');
                     if (shoppingAdsData.length) {
                         shuffleArray(shoppingAdsData);
                         if (galleryMode === 'shopping') {
