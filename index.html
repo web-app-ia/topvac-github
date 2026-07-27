@@ -4732,36 +4732,6 @@
 </head>
 <body>
 
-<script>
-    function showLoading(msg) {
-        var el = document.getElementById('loadingOverlay') || (function(){
-            var d = document.createElement('div');
-            d.id = 'loadingOverlay';
-            d.innerHTML = '<div style="position:fixed;inset:0;z-index:99999;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;"><div style="width:48px;height:48px;border:5px solid #e8f5e9;border-top-color:#43a047;border-radius:50%;animation:spinSearch 0.7s linear infinite;"></div><span id="loadingText" style="color:#2e7d32;font-weight:600;font-size:1rem;">Chargement...</span></div>';
-            document.body.appendChild(d);
-            return d;
-        })();
-        var t = document.getElementById('loadingText');
-        if (t) t.textContent = msg || 'Chargement...';
-        el.style.display = '';
-    }
-    function hideLoading() {
-        var el = document.getElementById('loadingOverlay');
-        if (el) el.style.display = 'none';
-    }
-    function fetchWithFallback(url, options, fallbackKey) {
-        showLoading('Chargement...');
-        return fetch(url, options)
-            .then(function(r) { hideLoading(); return r; })
-            .catch(function(err) {
-                hideLoading();
-                toast('⚠️ Erreur réseau — données locales affichées');
-                var cached = [];
-                try { cached = JSON.parse(localStorage.getItem(fallbackKey) || '[]'); } catch(e) {}
-                return { ok:false, json:function(){return Promise.resolve({success:false,ads:cached});} };
-            });
-    }
-
     <div class="gallery-mode-bar">
         <button class="gallery-mode-btn active" id="galleryModeActivities" onclick="switchGalleryMode('activities')">Espace : Activités</button>
         <button class="gallery-mode-btn" id="galleryModeShopping" onclick="switchGalleryMode('shopping')">Espace : Shopping</button>
@@ -5449,6 +5419,34 @@
     </div>
 
     <script>
+        function showLoading(msg) {
+            var el = document.getElementById('loadingOverlay') || (function(){
+                var d = document.createElement('div');
+                d.id = 'loadingOverlay';
+                d.innerHTML = '<div style="position:fixed;inset:0;z-index:99999;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;"><div style="width:48px;height:48px;border:5px solid #e8f5e9;border-top-color:#43a047;border-radius:50%;animation:spinSearch 0.7s linear infinite;"></div><span id="loadingText" style="color:#2e7d32;font-weight:600;font-size:1rem;">Chargement...</span></div>';
+                document.body.appendChild(d);
+                return d;
+            })();
+            var t = document.getElementById('loadingText');
+            if (t) t.textContent = msg || 'Chargement...';
+            el.style.display = '';
+        }
+        function hideLoading() {
+            var el = document.getElementById('loadingOverlay');
+            if (el) el.style.display = 'none';
+        }
+        function fetchWithFallback(url, options, fallbackKey) {
+            showLoading('Chargement...');
+            return fetch(url, options)
+                .then(function(r) { hideLoading(); return r; })
+                .catch(function(err) {
+                    hideLoading();
+                    toast('⚠️ Erreur réseau — données locales affichées');
+                    var cached = [];
+                    try { cached = JSON.parse(localStorage.getItem(fallbackKey) || '[]'); } catch(e) {}
+                    return { ok:false, json:function(){return Promise.resolve({success:false,ads:cached});} };
+                });
+        }
         // ---- App icon menu ----
         function toggleAppMenu() {
             var menu = document.getElementById('appIconMenu');
